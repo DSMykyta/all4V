@@ -1,0 +1,35 @@
+/* /css/component/component-button-icon.css */
+
+.btn-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Стандартний розмір M3 для іконок-кнопок */
+    min-width: 32px;
+    height: 32px;
+    
+    background-color: transparent;
+    border: none;
+    border-radius: 50%; /* Робить кнопку круглою */
+    cursor: pointer;
+    text-decoration: none;
+    
+    /* Колір іконки успадковується від батьківського .panel-item */
+    color: inherit; 
+    
+    transition: background-color var(--transition-speed);
+}
+
+.btn-icon:hover,
+.btn-icon.active {
+    background-color: var(--color-main-t-2);
+    border-color: var(--color-main);
+    color: var(--color-main);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Тінь для піднесеного ефекту */
+}
+
+/* Розмір іконки всередині кнопки */
+.btn-icon .material-symbols-outlined {
+    font-size: 16px;
+}

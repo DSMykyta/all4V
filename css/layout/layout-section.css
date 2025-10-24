@@ -1,0 +1,36 @@
+section {
+    height: 100vh;
+    padding: 24px;
+    overflow: scroll;
+    padding-bottom: 72px;
+    border: 2px dashed #ccc;
+}
+
+.content-main section {
+    scroll-snap-align: start;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.section-name {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.section-name h2 {
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    font-size: 18px;
+}
+
+.section-header h3 {
+    font-weight: 400;
+    color: var(--text-secondary);
+    font-size: 12px;
+}

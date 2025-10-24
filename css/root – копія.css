@@ -1,0 +1,112 @@
+/* /css/root.css */
+:root {
+    /* --- КОЛЬОРИ (Палітра pin-guin, структура pin-map) --- */
+    --color-main: rgb(103, 80, 164);
+    /* from --splash */
+    --color-on-main: #ffffff;
+    /* from --white */
+    --color-main-c: rgba(103, 80, 164, 0.1);
+    /* from --splash-10 */
+    --color-on-main-c: rgb(103, 80, 164);
+    /* Derived from --splash */
+
+    --color-main-t-1: #6750a41a;
+    --color-main-t-2: #6750a433;
+
+    --color-secondary: rgb(98, 0, 238);
+    /* from --accent */
+    --color-on-secondary: #ffffff;
+    /* from --white */
+    --color-secondary-c: rgba(98, 0, 238, 0.1);
+    /* Derived */
+    --color-on-secondary-c: rgb(98, 0, 238);
+    /* Derived */
+
+    --color-tertiary: rgb(125, 82, 96);
+    /* Derived for tertiary in M3 style */
+    --color-on-tertiary: #ffffff;
+    /* from --white */
+    --color-tertiary-c: rgba(125, 82, 96, 0.1);
+    /* Derived */
+    --color-on-tertiary-c: rgb(125, 82, 96);
+    /* Derived */
+
+    --color-error: rgb(179, 38, 30);
+    /* M3 baseline error tone 40 */
+    --color-on-error: #ffffff;
+    /* from --white */
+    --color-error-c: rgba(179, 38, 30, 0.1);
+    /* Derived */
+    --color-on-error-c: rgb(179, 38, 30);
+    /* Derived */
+
+    --color-warning: rgb(191, 64, 0);
+    /* M3-style warning/amber tone 40 */
+    --color-on-warning: #ffffff;
+    /* from --white */
+    --color-warning-c: rgba(191, 64, 0, 0.1);
+    /* Derived */
+    --color-on-warning-c: rgb(191, 64, 0);
+    /* Derived */
+
+    --color-info: rgb(0, 98, 151);
+    /* M3-style info/blue tone 40 */
+    --color-on-info: #ffffff;
+    /* from --white */
+    --color-info-c: rgba(0, 98, 151, 0.1);
+    /* Derived */
+    --color-on-info-c: rgb(0, 98, 151);
+    /* Derived */
+
+    --color-surface: #f8f8fa;
+    /* from --back */
+    --color-on-surface: rgb(29, 27, 32);
+    /* from --main */
+    --color-on-surface-v: rgba(29, 27, 32, 0.65);
+    /* from --main-65 */
+
+    --color-surface-c-lowest: #ffffff;
+    /* from --white */
+    --color-surface-c-low: #f2ecee;
+    /* from panel color */
+    --color-surface-c: #e5e5e5;
+    /* from --border-color */
+    --color-surface-c-high: #d9d9d9;
+    /* Derived for higher elevation level */
+    --color-surface-c-highest: #cecece;
+    /* Derived for highest elevation level */
+
+    --color-outline: #e5e5e5;
+    /* from --border-color */
+    --color-outline-v: #d3d3d3;
+    /* Derived */
+
+    /* --- РОЗМІРИ ТА ВІДСТУПИ --- */
+    --radius-s: 8px;
+    --radius-m: 12px;
+    --radius-l: 16px;
+    --radius-full: 999px;
+
+    --space-s: 12px;
+    --space-m: 16px;
+    --space-l: 24px;
+
+    /* --- ТІНІ --- */
+    --shadow-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+    --shadow-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
+
+    /* --- СТИЛІ ТЕКСТУ --- */
+    --text-primary: #444746;    /* Основний текст */
+    --text-secondary: var(--color-on-surface-v);    /* Другорядний текст */
+    --text-disabled: rgba(29, 27, 32, 0.38);    /* Вимкнений текст */
+    --text-hint: rgba(29, 27, 32, 0.6);    /* Підказковий текст */
+    --text-on-surface: var(--color-on-surface);    /* Текст на поверхні */
+    --text-on-surface-variant: var(--color-on-surface-v);    /* Варіант тексту на поверхні */
+    --text-color: var(--color-main); /* Стандартний колір тексту */
+
+    /* --- УНІФІКОВАНІ ЗМІННІ ПАНЕЛЕЙ --- */
+    --panel-width-collapsed: 68px;
+    --panel-width-expanded: 260px;
+
+    --transition-speed: 0.2s;
+}

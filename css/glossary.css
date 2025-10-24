@@ -1,0 +1,285 @@
+/* /css/main.css */
+@import url('root.css');
+
+/* --- МАКЕТ --- */
+@import url('layout/layout-main.css');
+@import url('layout/layout-section.css');
+@import url('layout/layout-panel-left.css');
+@import url('layout/layout-panel-right.css');
+@import url('layout/layout-panel-content.css');
+@import url('layout/layout-grid.css');
+
+
+/* --- КОМПОНЕНТИ --- */
+@import url('component/component-buttons.css');
+@import url('component/component-dropdown.css');
+@import url('component/component-modal.css');
+@import url('component/component-tabs.css');
+@import url('component/component-preview.css');
+@import url('component/component-toast.css');
+@import url('component/component-context-menu.css');
+@import url('component/component-text-stats.css');
+
+.section-content-full-height {
+    flex-grow: 1; /* Дозволяє блоку зайняти всю висоту секції */
+    padding: 0; /* Прибираємо стандартний відступ, якщо iframe має бути впритул */
+    height: 80vh;
+    overflow-x: scroll;
+}
+
+/* css/links-generator.css */
+
+.links-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start; /* Кнопки притискаються до верху */
+}
+
+.link-button {
+    display: inline-flex; /* Щоб display: none працював коректно */
+    padding: 6px 12px;
+    background-color: var(--color-surface-container-low);
+    border: 1px solid var(--color-outline);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.link-button:hover {
+    background-color: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+    border-color: var(--color-secondary-container);
+}
+
+/* Анімація безперервного обертання */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Клас, який ми будемо додавати до іконки */
+.is-spinning {
+  animation: spin 1s linear infinite; /* Крутитися 1 секунду за оберт, безкінечно */
+}
+
+.input-main {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: var(--main);
+    font-size: 14px;
+    height: 32px;
+    padding: 0 8px;
+}
+.input-main:focus {
+    outline: none;
+}
+
+.form-group-icon {
+    color: var(--main-65);
+    font-size: 20px;
+}
+
+
+/* css/glossary.css */
+
+/* css/glossary.css - НОВІ СТИЛІ */
+
+/* --- ЗАГАЛЬНИЙ МАКЕТ СТОРІНКИ ГЛОСАРІЮ --- */
+
+/* --- СТИЛІ ДЛЯ ДЕРЕВА В АСАЙДІ --- */
+.glossary-tree {
+    font-size: 14px; /* Базовий розмір шрифту для дерева */
+}
+
+/* Прибираємо стандартні відступи списків */
+.glossary-tree ul {
+    list-style: none;
+    padding-left: 16px; /* Відступ для вкладеності */
+    margin: 0;
+}
+
+/* Ховаємо вкладені списки за замовчуванням */
+.glossary-tree li > ul {
+    display: none;
+}
+
+/* Показуємо вкладений список, якщо батько відкритий */
+.glossary-tree li.is-open > ul {
+    display: block;
+}
+
+/* Стиль для елемента списку (li) */
+.glossary-tree li {
+    padding: 1px 0; /* Невеликий вертикальний відступ */
+}
+
+/* Контейнер для іконки/кнопки та посилання */
+.tree-item-content {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px; /* Невеликі відступи */
+    border-radius: 4px;
+    transition: background-color 0.15s ease-in-out;
+}
+
+.tree-item-content:hover {
+    background-color: var(--color-surface-container-low); /* Підсвітка при наведенні */
+}
+
+/* Кнопка згортання/розгортання */
+.toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    margin-right: 4px; /* Відступ від тексту */
+    display: flex; /* Для вирівнювання іконки */
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    flex-shrink: 0; /* Щоб кнопка не стискалася */
+}
+.toggle-btn .material-symbols-outlined {
+    font-size: 20px;
+    transition: transform 0.2s ease-in-out;
+}
+
+/* Обертаємо стрілку для закритих елементів */
+.glossary-tree li:not(.is-open) > .tree-item-content .toggle-btn .material-symbols-outlined {
+    transform: rotate(-90deg);
+}
+
+/* Пустий елемент для вирівнювання елементів без дітей */
+.leaf-placeholder {
+    display: inline-block;
+    width: 20px; /* Ширина іконки */
+    height: 20px; /* Висота іконки */
+    margin-right: 4px; /* Відступ від тексту */
+    flex-shrink: 0;
+}
+
+/* Посилання на статтю */
+.tree-item-link {
+    text-decoration: none;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Три крапки для довгого тексту */
+    flex-grow: 1; /* Займає весь доступний простір */
+}
+.tree-item-link:hover {
+    color: var(--color-primary);
+}
+
+/* Стилі для рівнів (якщо потрібні різні шрифти/розміри) */
+.glossary-tree-level-0 > li > .tree-item-content .tree-item-link {
+    font-weight: 500; /* Перший рівень жирніший */
+}
+/* Можна додати стилі для .glossary-tree-level-1, .glossary-tree-level-2 і т.д. */
+
+
+/* --- СТИЛІ ДЛЯ СТАТЕЙ В ОСНОВНОМУ КОНТЕНТІ --- */
+
+/* Контейнер для всіх статей */
+.glossary-articles-container {
+    padding: 0; /* Прибираємо зайвий відступ */
+}
+
+/* Окрема стаття */
+.glossary-article {
+    background-color: transparent; /* Без фону, як у старому варіанті */
+    border: none; /* Без рамки */
+    margin-bottom: 3rem; /* Відступ між статтями, як у старому варіанті */
+    padding: 0; /* Без внутрішніх відступів */
+    scroll-margin-top: 20px; /* Відступ при скролі */
+    /* Ефект підсвітки залишаємо */
+    border-radius: 4px;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+/* Заголовок статті (як старий h3) */
+.article-header h2 {
+    font-weight: 600;
+    font-size: 1.875rem; /* Розмір як у старого h3 */
+    color: var(--text-primary);
+    margin-bottom: 0.5em; /* Відступ знизу */
+}
+
+/* Додаткові назви (якщо є) */
+.article-header .sub-name {
+    font-size: 14px; /* Трохи більший */
+    color: var(--text-secondary);
+    margin-bottom: 1em;
+}
+
+/* Основний текст статті */
+.article-content {
+    line-height: 1.7; /* Більша міжрядкова відстань */
+    color: var(--text-primary);
+    font-size: 14px; /* Стандартний розмір тексту */
+}
+
+.article-content p {
+    margin-bottom: 1em; /* Відступ між параграфами */
+}
+
+/* Стилі для списків, як у старому варіанті */
+.article-content ul, .article-content ol {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding-left: 1.6em;
+}
+.article-content li {
+    padding-left: 0.4em;
+    margin-top: 0.3em;
+    margin-bottom: 0.3em;
+}
+.article-content ::marker {
+  color: var(--text-secondary);
+}
+
+/* Стилі для коду, як у старому варіанті */
+.article-content code {
+  font-weight: 400;
+  padding: 1px 4px;
+  background-color: var(--color-surface-container-low);
+  border: 1px solid var(--color-outline-variant);
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+
+/* Стилі для посилань, як у старому варіанті */
+.article-content a {
+  text-underline-offset: 4px;
+  text-decoration-line: underline;
+  color: var(--color-primary); /* Використовуємо колір теми */
+  font-weight: 500;
+}
+
+/* Стилі для важливих блоків, як у старому варіанті */
+.important { /* Якщо будеш використовувати такий клас */
+  margin: 1.7rem 0;
+  padding: 0.7rem 1rem;
+  background-color: var(--color-error-container); /* Або інший колір для "важливо" */
+  color: var(--color-on-error-container);
+  border-radius: 12px;
+}
+.important h3 {
+  margin-top: 0;
+  color: var(--color-error);
+}
+
+/* Підсвітка при скролі */
+.glossary-article.is-highlighted {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}

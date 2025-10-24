@@ -1,0 +1,11 @@
+/* /css/component/component-tabs.css */
+
+/* За замовчуванням, весь контент вкладок прихований */
+[data-tab-content] {
+    display: none;
+}
+
+/* Активний контент стає видимим */
+[data-tab-content].is-active {
+    display: block;
+}

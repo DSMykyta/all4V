@@ -1,0 +1,96 @@
+/* /css/main.css */
+@import url('root.css');
+
+/* --- МАКЕТ --- */
+@import url('layout/layout-main.css');
+@import url('layout/layout-section.css');
+@import url('layout/layout-panel-left.css');
+@import url('layout/layout-panel-right.css');
+@import url('layout/layout-panel-content.css');
+@import url('layout/layout-grid.css');
+
+
+/* --- КОМПОНЕНТИ --- */
+@import url('component/component-buttons.css');
+@import url('component/component-dropdown.css');
+@import url('component/component-modal.css');
+@import url('component/component-tabs.css');
+@import url('component/component-preview.css');
+@import url('component/component-toast.css');
+@import url('component/component-context-menu.css');
+@import url('component/component-text-stats.css');
+
+/* --- ГЕНЕРАТОРИ --- */
+@import url('generator/generator-table.css');
+@import url('generator/generator-text.css');
+@import url('generator/generator-seo.css');
+@import url('generator/generator-links.css');
+
+.section-content-full-height {
+    flex-grow: 1; /* Дозволяє блоку зайняти всю висоту секції */
+    padding: 0; /* Прибираємо стандартний відступ, якщо iframe має бути впритул */
+    height: 80vh;
+    overflow-x: scroll;
+}
+
+/* css/links-generator.css */
+
+.links-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-content: flex-start; /* Кнопки притискаються до верху */
+}
+
+.link-button {
+    display: inline-flex; /* Щоб display: none працював коректно */
+    padding: 6px 12px;
+    background-color: var(--color-surface-container-low);
+    border: 1px solid var(--color-outline);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.link-button:hover {
+    background-color: var(--color-secondary-container);
+    color: var(--color-on-secondary-container);
+    border-color: var(--color-secondary-container);
+}
+
+/* Анімація безперервного обертання */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Клас, який ми будемо додавати до іконки */
+.is-spinning {
+  animation: spin 1s linear infinite; /* Крутитися 1 секунду за оберт, безкінечно */
+}
+
+.input-main {
+    width: 100%;
+    background-color: transparent;
+    border: none;
+    color: var(--main);
+    font-size: 14px;
+    height: 32px;
+    padding: 0 8px;
+}
+.input-main:focus {
+    outline: none;
+}
+
+.form-group-icon {
+    color: var(--main-65);
+    font-size: 20px;
+}

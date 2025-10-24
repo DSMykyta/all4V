@@ -1,0 +1,53 @@
+/* /css/layout/layout-main.css */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Google Sans", "Roboto", sans-serif;
+}
+
+body {
+    background-color: var(--color-surface);
+    color: var(--color-on-surface);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.content-main {
+    flex-grow: 1;
+    height: 100vh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    margin-left: var(--panel-width-collapsed);
+    padding-right: var(--panel-width-expanded);
+    transition: margin-right var(--transition-speed) ease-in-out;
+}
+
+body.right-panel-collapsed .content-main {
+    padding-right: var(--panel-width-collapsed); /* Якщо змінна не визначена, буде 68px */
+}
+
+::marker {
+    color: var(--color-on-surface-v);
+}
+
+::-webkit-scrollbar {
+    background-color: transparent;
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: var(--color-outline);
+    border-radius: 99px;
+}
+
+::selection {
+    background-color: var(--color-main-c);
+    color: var(--color-main);
+}
+
+.material-symbols-outlined {
+    font-size: 16px !important;
+}

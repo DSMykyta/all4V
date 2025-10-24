@@ -1,0 +1,187 @@
+/* /css/component/component-panel-item.css */
+
+/* Базовий клас для всіх пунктів меню/кнопок в панелях */
+.panel-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-m);
+    height: 48px;
+    width: 100%;
+    padding: 0 var(--space-m);
+    border-radius: var(--radius-s);
+    
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-hint);
+
+    white-space: nowrap;
+    overflow: hidden;
+    transition: background-color var(--transition-speed), color var(--transition-speed);
+}
+
+/* Стан при наведенні або активний стан */
+.panel-item:hover,
+.panel-item.is-active {
+    background-color: var(--color-main-c);
+    color: var(--color-main);
+}
+
+/* Іконка зліва */
+.panel-item .panel-item-icon {
+    flex-shrink: 0;
+    font-size: 20px;
+}
+
+/* Текст */
+.panel-item .panel-item-text {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: auto;
+}
+
+/* Іконка-дія справа (для "відкрити в новому вікні" або "меню") */
+.panel-item .panel-item-action {
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--color-on-surface-v);
+}
+
+.panel-item:hover .panel-item-action {
+    color: var(--color-main);
+}
+
+
+/* --- Специфічні стилі для ТИПУ 3 (Комбінована кнопка) --- */
+
+/* За замовчуванням, іконка "open_in_new" прихована */
+.panel-item .panel-item-action.on-hover {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-speed), visibility var(--transition-speed);
+}
+
+/* При наведенні на весь блок .panel-item, іконка з'являється */
+.panel-item:hover .panel-item-action.on-hover {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Основне посилання всередині комбінованої кнопки */
+.panel-item .main-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+    flex-grow: 1;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Правило для іконки, що з'являється при наведенні */
+.panel-item .on-hover {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-speed), visibility var(--transition-speed);
+}
+
+.panel-item:hover .on-hover {
+    opacity: 1;
+    visibility: visible;
+}
+
+
+/* --- Кінець специфічних стилів для ТИПУ 3 --- */
+
+/* Базовий клас для панельних боксів/кнопок */
+.panel-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-m);
+    height: 68px;
+    min-width: 48px;
+    border-radius: var(--radius-m);
+    padding: 0 var(--space-m);
+
+    background-color: var(--color-main-t-1);
+    border: 1px solid var(--color-main);
+    cursor: pointer;
+    text-decoration: none;
+    
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+
+    white-space: nowrap;
+    overflow: hidden;
+    transition: all var(--transition-speed);
+    
+    position: relative;
+}
+
+/* Стан при наведенні або активний стан */
+.panel-box:hover,
+.panel-box.is-active {
+    background-color: var(--color-main-t-2);
+    border-color: var(--color-main);
+    color: var(--color-main);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Тінь для піднесеного ефекту */
+}
+
+/* Іконка зліва */
+.panel-box .panel-item-icon {
+    flex-shrink: 0;
+    font-size: 20px;
+}
+
+/* Текст */
+.panel-box .panel-item-text {
+    display: flex;
+    flex-grow: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: auto;
+}
+
+/* Обгортка для дій справа (адаптовано для dropdown) */
+.panel-box .panel-item-action-wrapper {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Іконка-дія справа */
+.panel-box .panel-item-action {
+    flex-shrink: 0;
+    color: var(--color-on-surface);
+    transition: color var(--transition-speed);
+}
+
+.panel-box:hover .panel-item-action {
+    color: var(--color-main);
+}
+
+.panel-box.dropdown-wrapper.is-open .dropdown-menu {
+    display: block; /* Або visibility: visible, залежно від базових стилів dropdown */
+}
+
+/* Приховування/показ іконки при наведенні (аналогічно panel-item) */
+.panel-box .on-hover {
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-speed), visibility var(--transition-speed);
+}
+
+.panel-box:hover .on-hover {
+    opacity: 1;
+    visibility: visible;
+}
+
