@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сутності</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap"
+        rel="stylesheet">
+    <script async defer src="https://apis.google.com/js/api.js"></script>
+    <script async defer src="https://accounts.google.com/gsi/client"></script>
+</head>
+
+<body>
+
+    <nav id="panel-left" class="panel panel-left">
+        <div class="panel-content-scroll">
+            
+            <a href="index.html" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">home</span>
+                <span class="panel-item-text">Інструменти</span>
+            </a>
+
+            <a href="glossary.html" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">import_contacts</span>
+                <span class="panel-item-text">Глосарій</span>
+            </a>
+
+            <a href="entities.html" class="panel-item is-active">
+                <span class="material-symbols-outlined panel-item-icon">label</span>
+                <span class="panel-item-text">Сутності</span>
+            </a>
+
+            <div class="panel-separator"></div>
+
+            <div class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">info</span>
+                <span class="panel-item-text">Про проект</span>
+            </div>
+
+        </div>
+
+        <div class="panel-content-footer">
+            <button id="auth-btn" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">login</span>
+                <span class="panel-item-text">Авторизація</span>
+            </button>
+        </div>
+    </nav>
+
+    <main id="content-main" class="content-main">
+        
+        <div class="section-header">
+            <div class="section-name-block">
+                <div class="section-name">
+                    <h2>Сутності</h2>
+                    <button class="btn-icon" aria-label="Інформація">
+                        <span class="material-symbols-outlined">info</span>
+                    </button>
+                </div>
+                <h3>Керування категоріями, характеристиками та опціями</h3>
+            </div>
+
+            <div class="section-actions">
+                <button id="btn-add-entity" class="btn-primary">
+                    <span class="material-symbols-outlined">add</span>
+                    Додати
+                </button>
+                <button id="btn-refresh-data" class="btn-icon" aria-label="Оновити дані">
+                    <span class="material-symbols-outlined">refresh</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-button active" data-tab="categories">
+                    <span class="material-symbols-outlined">category</span>
+                    Категорії
+                </button>
+                <button class="tab-button" data-tab="characteristics">
+                    <span class="material-symbols-outlined">tune</span>
+                    Характеристики
+                </button>
+                <button class="tab-button" data-tab="options">
+                    <span class="material-symbols-outlined">list</span>
+                    Опції
+                </button>
+            </div>
+
+            <div class="tab-content active" data-tab-content="categories">
+                <div id="categories-table-container" class="table-wrapper">
+                    <table class="entities-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all-categories" aria-label="Вибрати всі">
+                                </th>
+                                <th>ID</th>
+                                <th>Батьківська</th>
+                                <th>Назва (укр)</th>
+                                <th>Назва (рос)</th>
+                                <th>Тип</th>
+                                <th>Дії</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-tbody">
+                            <tr class="loading-row">
+                                <td colspan="7">
+                                    <div class="loading-spinner"></div>
+                                    Завантаження...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" data-tab-content="characteristics">
+                <div id="characteristics-table-container" class="table-wrapper">
+                    <table class="entities-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all-characteristics" aria-label="Вибрати всі">
+                                </th>
+                                <th>ID</th>
+                                <th>Назва (укр)</th>
+                                <th>Назва (рос)</th>
+                                <th>Тип параметра</th>
+                                <th>Одиниця</th>
+                                <th>Тип фільтра</th>
+                                <th>Глобальна</th>
+                                <th>Дії</th>
+                            </tr>
+                        </thead>
+                        <tbody id="characteristics-tbody">
+                            <tr class="loading-row">
+                                <td colspan="9">
+                                    <div class="loading-spinner"></div>
+                                    Завантаження...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="tab-content" data-tab-content="options">
+                <div id="options-table-container" class="table-wrapper">
+                    <table class="entities-table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="select-all-options" aria-label="Вибрати всі">
+                                </th>
+                                <th>ID</th>
+                                <th>ID Характеристики</th>
+                                <th>Назва (укр)</th>
+                                <th>Назва (рос)</th>
+                                <th>Дії</th>
+                            </tr>
+                        </thead>
+                        <tbody id="options-tbody">
+                            <tr class="loading-row">
+                                <td colspan="6">
+                                    <div class="loading-spinner"></div>
+                                    Завантаження...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <aside id="panel-right" class="panel panel-right is-collapsed">
+        <div class="panel-header">
+            <button id="btn-panel-right-toggle" class="btn-icon" aria-label="Розгорнути панель">
+                <span class="material-symbols-outlined">keyboard_arrow_left</span>
+            </button>
+        </div>
+        
+        <div class="panel-content" id="panel-right-content">
+            <!-- Контент завантажується з aside-entities.html -->
+        </div>
+    </aside>
+
+    <script type="module" src="js/main-entities.js"></script>
+
+</body>
+
+</html>
