@@ -5,6 +5,19 @@ import { syncTulipsFromProductName, addTulip } from './gse-triggers.js';
 import { updateCountryDisplay } from './gse-brand.js';
 import { updateCounters } from './gse-counters.js';
 
+// Utility функція для debounce
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
 /**
  * Головна функція, яка робить ТІЛЬКИ перерахунок SEO-полів.
  */
@@ -33,13 +46,14 @@ export function runCalculations() {
 export function initEventListeners() {
     const dom = getSeoDOM();
     
-    dom.inputTextMarkup.addEventListener('input', () => {
+    dom.inputTextMarkup.addEventListener('input', debounce(() => {
         const { brand, product } = logic.updateBrandAndProductFromText(dom.inputTextMarkup.value);
         dom.brandNameInput.value = brand;
         dom.productNameInput.value = product;
         syncTulipsFromProductName();
         runCalculations();
-    });
+    }, 300));
+
 
     dom.productNameInput.addEventListener('input', () => {
         syncTulipsFromProductName();

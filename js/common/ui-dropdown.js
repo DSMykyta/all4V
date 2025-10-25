@@ -1,6 +1,7 @@
 export function initDropdowns() {
     // Add document click listener only once
-    if (!window.dropdownDocumentListener) {
+    const initialized = Symbol.for('dropdownDocumentListener');
+    if (!window[initialized]) {
         document.addEventListener('click', (e) => {
             document.querySelectorAll('.dropdown-wrapper.is-open').forEach(openWrapper => {
                 if (!openWrapper.contains(e.target)) {
@@ -8,7 +9,7 @@ export function initDropdowns() {
                 }
             });
         });
-        window.dropdownDocumentListener = true;
+        window[initialized] = true;
     }
 
     // Select only uninitialized triggers
@@ -25,7 +26,7 @@ export function initDropdowns() {
 
         trigger.addEventListener('click', (e) => {
             e.stopPropagation();
-            
+
             const isOpen = wrapper.classList.contains('is-open');
 
             // Close other open wrappers
