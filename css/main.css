@@ -26,6 +26,10 @@
 @import url('generator/generator-seo.css');
 @import url('generator/generator-links.css');
 
+/* --- СТОРІНКИ --- */
+@import url('page/page-entities.css');
+
+
 .section-content-full-height {
     flex-grow: 1; /* Дозволяє блоку зайняти всю висоту секції */
     padding: 0; /* Прибираємо стандартний відступ, якщо iframe має бути впритул */
@@ -93,4 +97,10 @@
 .form-group-icon {
     color: var(--main-65);
     font-size: 20px;
+}
+
+.panel-item-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }

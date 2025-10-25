@@ -1,5 +1,16 @@
 /* seo-generator.css: Стилі для блоку генерації SEO */
 
+#triger-buttons-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    overflow: scroll;
+    flex-direction: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+
 /* --- Основний контент --- */
 .seo-line-container {
     position: relative;
@@ -71,9 +82,9 @@
     padding: 0 12px;
     font-weight: 500;
     font-size: 13px;
-    border: 1px solid var(--border-color);
+    border: 1px solid var(--color-outline);
     border-radius: 8px;
-    background-color: var(--back-secondary);
+    background-color: var(--color-main-t-1);
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
@@ -81,24 +92,23 @@
 
 .trigger-button,
 .trigger-title-inactive {
-    color: var(--main-65);
-}
-
-.trigger-button:hover,
-.trigger-title-inactive:hover {
-    color: var(--main);
-    background-color: var(--main-5);
-    border-color: var(--main-20);
+    color: var(--color-main);
 }
 
 .trigger-title-active {
-    color: var(--white);
-    border-color: var(--splash);
-    background-color: var(--splash);
+    color: var(--color-on-main);
+    background-color: var(--color-main);
+    border-color: var(--color-main);
 }
 
+.trigger-button:hover,
+.trigger-title-inactive:hover,
 .trigger-title-active:hover {
-    opacity: 0.9;
+    color: var(--color-on-main);
+    background-color: var(--color-main);
+    border-color: var(--color-main);
+    border-radius: 24px;
+    transform: border-radius 0.5s, background-color 0.2s, color 0.2s;
 }
 
 .tooltip {
