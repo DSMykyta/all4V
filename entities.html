@@ -54,144 +54,132 @@
         </div>
     </nav>
 
-    <main id="content-main" class="content-main">
-        
-        <div class="section-header">
-            <div class="section-name-block">
-                <div class="section-name">
-                    <h2>Сутності</h2>
-                    <button class="btn-icon" aria-label="Інформація">
-                        <span class="material-symbols-outlined">info</span>
-                    </button>
+<main id="content-main" class="content-main">
+        <section id="section-entities" data-panel-template="aside-entities">
+            
+            <!-- HEADER -->
+            <div class="section-header">
+                <div class="section-name-block">
+                    <div class="section-name">
+                        <h2>Сутності</h2>
+                        <button class="btn-icon" aria-label="Інформація">
+                            <span class="material-symbols-outlined">info</span>
+                        </button>
+                    </div>
+                    <h3>Управління категоріями, характеристиками та опціями</h3>
                 </div>
-                <h3>Керування категоріями, характеристиками та опціями</h3>
-            </div>
-
-            <div class="section-actions">
-                <button id="btn-add-entity" class="btn-primary">
-                    <span class="material-symbols-outlined">add</span>
-                    Додати
-                </button>
-                <button id="btn-refresh-data" class="btn-icon" aria-label="Оновити дані">
+                <button id="reload-section-entities" class="btn-icon btn-reload" aria-label="Перезавантажити"
+                    style="color: var(--text-disabled);">
                     <span class="material-symbols-outlined">refresh</span>
                 </button>
             </div>
-        </div>
 
-        <div class="tabs-container">
-            <div class="tabs-header">
-                <button class="tab-button active" data-tab="categories">
+            <!-- TABS -->
+            <div class="entities-tabs-nav">
+                <button class="entities-tab is-active" data-tab="categories">
                     <span class="material-symbols-outlined">category</span>
                     Категорії
                 </button>
-                <button class="tab-button" data-tab="characteristics">
+                <button class="entities-tab" data-tab="characteristics">
                     <span class="material-symbols-outlined">tune</span>
                     Характеристики
                 </button>
-                <button class="tab-button" data-tab="options">
+                <button class="entities-tab" data-tab="options">
                     <span class="material-symbols-outlined">list</span>
                     Опції
                 </button>
             </div>
 
-            <div class="tab-content active" data-tab-content="categories">
-                <div id="categories-table-container" class="table-wrapper">
+            <!-- BODY (з прокруткою) -->
+            <div class="entities-body">
+                
+                <!-- Categories Tab -->
+                <div class="entities-tab-pane is-active" data-tab-pane="categories">
                     <table class="entities-table">
                         <thead>
                             <tr>
-                                <th>
-                                    <input type="checkbox" id="select-all-categories" aria-label="Вибрати всі">
-                                </th>
                                 <th>ID</th>
-                                <th>Батьківська</th>
-                                <th>Назва (укр)</th>
-                                <th>Назва (рос)</th>
-                                <th>Тип</th>
+                                <th>Назва</th>
                                 <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="categories-tbody">
-                            <tr class="loading-row">
-                                <td colspan="7">
-                                    <div class="loading-spinner"></div>
-                                    Завантаження...
-                                </td>
+                            <tr>
+                                <td colspan="3" class="loading-state">Завантаження категорій...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <div class="tab-content" data-tab-content="characteristics">
-                <div id="characteristics-table-container" class="table-wrapper">
+                <!-- Characteristics Tab -->
+                <div class="entities-tab-pane" data-tab-pane="characteristics">
                     <table class="entities-table">
                         <thead>
                             <tr>
-                                <th>
-                                    <input type="checkbox" id="select-all-characteristics" aria-label="Вибрати всі">
-                                </th>
                                 <th>ID</th>
-                                <th>Назва (укр)</th>
-                                <th>Назва (рос)</th>
-                                <th>Тип параметра</th>
-                                <th>Одиниця</th>
-                                <th>Тип фільтра</th>
-                                <th>Глобальна</th>
+                                <th>Назва</th>
+                                <th>Категорія</th>
                                 <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="characteristics-tbody">
-                            <tr class="loading-row">
-                                <td colspan="9">
-                                    <div class="loading-spinner"></div>
-                                    Завантаження...
-                                </td>
+                            <tr>
+                                <td colspan="4" class="loading-state">Завантаження характеристик...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
 
-            <div class="tab-content" data-tab-content="options">
-                <div id="options-table-container" class="table-wrapper">
+                <!-- Options Tab -->
+                <div class="entities-tab-pane" data-tab-pane="options">
                     <table class="entities-table">
                         <thead>
                             <tr>
-                                <th>
-                                    <input type="checkbox" id="select-all-options" aria-label="Вибрати всі">
-                                </th>
                                 <th>ID</th>
-                                <th>ID Характеристики</th>
-                                <th>Назва (укр)</th>
-                                <th>Назва (рос)</th>
+                                <th>Назва</th>
+                                <th>Характеристика</th>
                                 <th>Дії</th>
                             </tr>
                         </thead>
                         <tbody id="options-tbody">
-                            <tr class="loading-row">
-                                <td colspan="6">
-                                    <div class="loading-spinner"></div>
-                                    Завантаження...
-                                </td>
+                            <tr>
+                                <td colspan="4" class="loading-state">Завантаження опцій...</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-        </div>
 
+            </div>
+
+            <!-- FOOTER -->
+            <div class="entities-footer">
+                <button id="btn-add-entity" class="btn-icon" title="Додати">
+                    <span class="material-symbols-outlined">add</span>
+                </button>
+                <button id="btn-import" class="btn-icon" title="Імпорт">
+                    <span class="material-symbols-outlined">upload</span>
+                </button>
+                <button id="btn-export" class="btn-icon" title="Експорт">
+                    <span class="material-symbols-outlined">download</span>
+                </button>
+                <button id="btn-delete-selected" class="btn-icon" title="Видалити обране" disabled>
+                    <span class="material-symbols-outlined">delete</span>
+                </button>
+                <button id="btn-merge" class="btn-icon" title="Об'єднати" disabled>
+                    <span class="material-symbols-outlined">merge</span>
+                </button>
+            </div>
+
+        </section>
     </main>
 
-    <aside id="panel-right" class="panel panel-right is-collapsed">
+    <aside id="panel-right" class="panel panel-right">
         <div class="panel-header">
-            <button id="btn-panel-right-toggle" class="btn-icon" aria-label="Розгорнути панель">
+            <button id="btn-panel-right-toggle" class="btn-icon" aria-label="Згорнути панель">
                 <span class="material-symbols-outlined">keyboard_arrow_left</span>
             </button>
         </div>
-        
-        <div class="panel-content" id="panel-right-content">
-            <!-- Контент завантажується з aside-entities.html -->
-        </div>
+        <div id="panel-right-content" class="panel-content"></div>
     </aside>
 
     <script type="module" src="js/main-entities.js"></script>
