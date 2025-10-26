@@ -29,12 +29,12 @@ export function switchTab(tabName) {
 
     // Оновлюємо активний стан кнопок
     dom.tabButtons.forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tab === tabName);
+        btn.classList.toggle('is-active', btn.dataset.tab === tabName);
     });
 
     // Оновлюємо активний стан контенту
     dom.tabContents.forEach(content => {
-        content.classList.toggle('active', content.dataset.tabContent === tabName);
+        content.classList.toggle('is-active', content.dataset.tabPane === tabName);
     });
 
     // Очищаємо вибрані елементи

@@ -63,3 +63,15 @@
     background-color: var(--color-outline);
     margin: 4px 0;
 }
+
+.panel-info-text {
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 8px 12px;
+    text-align: center;
+}
+
+.panel-info-text strong {
+    color: var(--text-primary);
+    font-weight: 600;
+}

@@ -113,3 +113,20 @@
     padding: 48px 16px !important;
     color: var(--text-secondary);
 }
+
+.empty-state-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.empty-state-content .material-symbols-outlined {
+    font-size: 48px;
+    opacity: 0.5;
+}
+
+.empty-state-content p {
+    margin: 0;
+    font-size: 14px;
+}

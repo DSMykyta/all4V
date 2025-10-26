@@ -81,13 +81,13 @@ async function handleRefreshData() {
         // Показуємо індикатор завантаження
         switch (currentTab) {
             case 'categories':
-                showLoadingState(dom.categoriesTbody, 7);
+                showLoadingState(dom.categoriesTbody, 3);
                 break;
             case 'characteristics':
-                showLoadingState(dom.characteristicsTbody, 9);
+                showLoadingState(dom.characteristicsTbody, 4);
                 break;
             case 'options':
-                showLoadingState(dom.optionsTbody, 6);
+                showLoadingState(dom.optionsTbody, 4);
                 break;
         }
 
