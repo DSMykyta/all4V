@@ -24,12 +24,9 @@ export function setupEventListeners() {
     const dom = getTableDOM();
     if (!dom.rowsContainer) return;
 
-    // === ОНОВЛЕННЯ: Логіка кнопки "Оновити" ===
     if (dom.reloadBtn) {
-        // Тепер кнопка не очищує таблицю, а лише отримує атрибут для виклику модалу.
         dom.reloadBtn.dataset.modalTrigger = 'confirm-clear-modal';
     }
-    // ===========================================
 
     const rightPanel = document.getElementById('panel-right');
     if (rightPanel) {
@@ -66,30 +63,30 @@ export function setupEventListeners() {
         const magicApplyBtn = event.target.closest('#magic-apply-btn');
         if (magicApplyBtn) handleMagicApply();
 
-        const previewTrigger = event.target.closest('[data-modal-trigger="preview-modal"]');
-        if (previewTrigger) handlePreview(previewTrigger);
+        // ВИДАЛЕНО старий handlePreview
 
-        // === НОВА ЛОГІКА: Підтвердження очищення ===
         const confirmClearBtn = event.target.closest('#confirm-clear-action');
         if (confirmClearBtn) {
-            resetTableSection(); // Викликаємо очищення
-            document.querySelector('#global-modal-wrapper .modal-close-btn')?.click(); // Закриваємо модал
+            resetTableSection();
+            document.querySelector('#global-modal-wrapper .modal-close-btn')?.click();
         }
-        // ========================================
 
-        // Додаємо обробник для кнопок "Скасувати"
         const modalCloseBtn = event.target.closest('[data-modal-close]');
         if (modalCloseBtn) {
              document.querySelector('#global-modal-wrapper .modal-close-btn')?.click();
         }
     });
+
+    // ДОДАНО: Слухаємо modal-opened event
+    document.addEventListener('modal-opened', handleTablePreview);
     
     const debouncedCalculateAndSave = debounce(() => {
         calculatePercentages();
-        autoSaveSession(); // <-- Додати виклик автозбереження
+        autoSaveSession();
     }, 300);
     dom.rowsContainer.addEventListener('input', debouncedCalculateAndSave);
 }
+
 
 // --- Допоміжні функції для обробників ---
 
@@ -106,12 +103,18 @@ function handleMagicApply() {
  * Обробляє запит на попередній перегляд.
  * @param {HTMLElement} trigger - Кнопка, що викликала подію.
  */
-function handlePreview(trigger) {
-    const previewType = trigger.dataset.previewTarget;
+function handleTablePreview(event) {
+    const { modalId, trigger } = event.detail;
+    
+    // Перевіряємо чи це preview-modal
+    if (modalId !== 'preview-modal') return;
+    
+    const previewType = trigger?.dataset?.previewTarget;
     if (!previewType) return;
 
-    // Модальне вікно відкриється автоматично завдяки ui-modal.js.
-    // Нам потрібно лише зачекати, поки воно з'явиться в DOM, і вставити контент.
+    // Перевіряємо чи це табличний preview (html або br)
+    if (!['html', 'br'].includes(previewType)) return;
+
     setTimeout(() => {
         const contentTarget = document.getElementById('preview-content-target');
         if (!contentTarget) {
@@ -119,7 +122,7 @@ function handlePreview(trigger) {
             return;
         }
 
-        if (checkForEmptyNutritionFacts(true)) { // silent=true
+        if (checkForEmptyNutritionFacts(true)) {
             contentTarget.innerHTML = `<p style="color: var(--color-error);">Помилка: обов'язкове поле "Пищевая ценность" не заповнено!</p>`;
             return;
         }
@@ -132,9 +135,8 @@ function handlePreview(trigger) {
         }
 
         contentTarget.innerHTML = generatedContent || '<p>Нічого для відображення.</p>';
-    }, 100); // Невелика затримка, щоб модальне вікно встигло відрендеритись
+    }, 50);
 }
-
 
 function addSampleList(items) {
     items.forEach(item => {
