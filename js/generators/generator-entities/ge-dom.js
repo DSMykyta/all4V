@@ -18,8 +18,8 @@ export function getEntitiesDOM() {
         authBtn: document.getElementById('auth-btn'),
 
         // Таби
-        tabButtons: document.querySelectorAll('.tab-button'),
-        tabContents: document.querySelectorAll('.tab-content'),
+        tabButtons: document.querySelectorAll('.entities-tab'),
+        tabContents: document.querySelectorAll('.entities-tab-pane'),
 
         // Таблиці
         categoriesTbody: document.getElementById('categories-tbody'),

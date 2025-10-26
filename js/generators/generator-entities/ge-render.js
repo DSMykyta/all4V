@@ -11,11 +11,10 @@ export function renderCategories(tbody, data = null) {
     if (categories.length === 0) {
         tbody.innerHTML = `
             <tr class="empty-state">
-                <td colspan="7">
-                    <div class="empty-state">
+                <td colspan="3">
+                    <div class="empty-state-content">
                         <span class="material-symbols-outlined">category</span>
-                        <h3>Немає категорій</h3>
-                        <p>Додайте першу категорію, щоб почати</p>
+                        <p>Немає категорій</p>
                     </div>
                 </td>
             </tr>
@@ -25,16 +24,10 @@ export function renderCategories(tbody, data = null) {
 
     tbody.innerHTML = categories.map(cat => `
         <tr data-entity-id="${cat.local_id}" data-row-index="${cat._rowIndex}">
-            <td>
-                <input type="checkbox" class="row-checkbox" data-id="${cat.local_id}">
-            </td>
             <td><code>${cat.local_id}</code></td>
-            <td>${cat.parent_local_id || '<em>—</em>'}</td>
-            <td>${cat.name_uk || ''}</td>
-            <td>${cat.name_ru || ''}</td>
-            <td>${cat.category_type || ''}</td>
+            <td>${cat.name_uk || cat.name_ru || '—'}</td>
             <td>
-                <div class="table-actions">
+                <div class="actions-cell">
                     <button class="btn-icon btn-edit" data-id="${cat.local_id}" title="Редагувати">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
@@ -56,11 +49,10 @@ export function renderCharacteristics(tbody, data = null) {
     if (characteristics.length === 0) {
         tbody.innerHTML = `
             <tr class="empty-state">
-                <td colspan="9">
-                    <div class="empty-state">
+                <td colspan="4">
+                    <div class="empty-state-content">
                         <span class="material-symbols-outlined">tune</span>
-                        <h3>Немає характеристик</h3>
-                        <p>Додайте першу характеристику, щоб почати</p>
+                        <p>Немає характеристик</p>
                     </div>
                 </td>
             </tr>
@@ -70,22 +62,11 @@ export function renderCharacteristics(tbody, data = null) {
 
     tbody.innerHTML = characteristics.map(char => `
         <tr data-entity-id="${char.local_id}" data-row-index="${char._rowIndex}">
-            <td>
-                <input type="checkbox" class="row-checkbox" data-id="${char.local_id}">
-            </td>
             <td><code>${char.local_id}</code></td>
-            <td>${char.name_uk || ''}</td>
-            <td>${char.name_ru || ''}</td>
-            <td>${char.param_type || ''}</td>
-            <td>${char.unit || '—'}</td>
-            <td>${char.filter_type || ''}</td>
+            <td>${char.name_uk || char.name_ru || '—'}</td>
+            <td><code>${char.category_local_id || '—'}</code></td>
             <td>
-                ${char.is_global === 'true' || char.is_global === true 
-                    ? '<span style="color: green;">✓</span>' 
-                    : '<span style="color: gray;">—</span>'}
-            </td>
-            <td>
-                <div class="table-actions">
+                <div class="actions-cell">
                     <button class="btn-icon btn-edit" data-id="${char.local_id}" title="Редагувати">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
@@ -107,11 +88,10 @@ export function renderOptions(tbody, data = null) {
     if (options.length === 0) {
         tbody.innerHTML = `
             <tr class="empty-state">
-                <td colspan="6">
-                    <div class="empty-state">
+                <td colspan="4">
+                    <div class="empty-state-content">
                         <span class="material-symbols-outlined">list</span>
-                        <h3>Немає опцій</h3>
-                        <p>Додайте першу опцію, щоб почати</p>
+                        <p>Немає опцій</p>
                     </div>
                 </td>
             </tr>
@@ -121,15 +101,11 @@ export function renderOptions(tbody, data = null) {
 
     tbody.innerHTML = options.map(opt => `
         <tr data-entity-id="${opt.local_id}" data-row-index="${opt._rowIndex}">
-            <td>
-                <input type="checkbox" class="row-checkbox" data-id="${opt.local_id}">
-            </td>
             <td><code>${opt.local_id}</code></td>
-            <td><code>${opt.char_local_id || ''}</code></td>
-            <td>${opt.name_uk || ''}</td>
-            <td>${opt.name_ru || ''}</td>
+            <td>${opt.name_uk || opt.name_ru || '—'}</td>
+            <td><code>${opt.char_local_id || '—'}</code></td>
             <td>
-                <div class="table-actions">
+                <div class="actions-cell">
                     <button class="btn-icon btn-edit" data-id="${opt.local_id}" title="Редагувати">
                         <span class="material-symbols-outlined">edit</span>
                     </button>
@@ -146,12 +122,19 @@ export function renderOptions(tbody, data = null) {
  * Оновлює лічильник вибраних елементів
  */
 export function updateSelectedCount(selectedCountEl) {
+    if (!selectedCountEl) return;
+
     const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
     const count = checkedBoxes.length;
-    
-    selectedCountEl.textContent = count === 0 
-        ? '0 елементів' 
-        : `${count} ${getWordEnding(count)}`;
+
+    const strongEl = selectedCountEl.querySelector('strong');
+    if (strongEl) {
+        strongEl.textContent = count;
+    } else {
+        selectedCountEl.textContent = count === 0
+            ? '0 елементів'
+            : `${count} ${getWordEnding(count)}`;
+    }
 }
 
 /**
