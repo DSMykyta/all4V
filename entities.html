@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Сутності</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/page/page-entities.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap"
+        rel="stylesheet">
+    <script async defer src="https://apis.google.com/js/api.js"></script>
+    <script async defer src="https://accounts.google.com/gsi/client"></script>
+</head>
+
+<body>
+
+    <nav id="panel-left" class="panel panel-left">
+
+        <div class="panel-content-scroll">
+
+            <a href="index.html" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">arrow_back</span>
+                <span class="panel-item-text">Інструменти</span>
+            </a>
+
+            <a href="glossary.html" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">import_contacts</span>
+                <span class="panel-item-text">Глосарій</span>
+                <div class="btn-icon">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                </div>
+            </a>
+
+            <a href="entities.html" class="panel-item is-active">
+                <span class="material-symbols-outlined panel-item-icon">label</span>
+                <span class="panel-item-text">Сутності</span>
+            </a>
+
+            <a href="#" target="_blank" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">shopping_bag</span>
+                <span class="panel-item-text">Бренди</span>
+                <div class="btn-icon">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                </div>
+            </a>
+
+            <a href="#" target="_blank" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">key</span>
+                <span class="material-symbols-outlined panel-item-text">Ключові слова</span>
+                <div class="btn-icon">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                </div>
+            </a>
+
+            <div class="panel-separator"></div>
+
+            <a href="#" target="_blank" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">show_chart</span>
+                <span class="panel-item-text">Графік</span>
+                <div class="btn-icon">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                </div>
+            </a>
+
+        </div>
+
+        <div class="panel-content-footer">
+            <button id="auth-btn" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">login</span>
+                <span class="panel-item-text">Авторизація</span>
+            </button>
+        </div>
+
+    </nav>
+
+    <main id="content-main" class="content-main entities-main-content">
+        <section id="section-entities" data-panel-template="aside-entities">
+            <div class="section-header">
+                <div class="section-name-block">
+                    <h2>Сутності</h2>
+                    <h3>Управління категоріями, характеристиками та опціями</h3>
+                </div>
+                <button id="reload-section-entities" class="btn-icon btn-reload" aria-label="Перезавантажити дані"
+                    style="color: var(--text-disabled);">
+                    <span class="material-symbols-outlined">refresh</span>
+                </button>
+            </div>
+
+            <div class="section-content">
+                <!-- Tabs Navigation -->
+                <div class="entities-tabs">
+                    <button class="entities-tab is-active" data-tab="categories">
+                        <span class="material-symbols-outlined">category</span>
+                        Категорії
+                    </button>
+                    <button class="entities-tab" data-tab="characteristics">
+                        <span class="material-symbols-outlined">tune</span>
+                        Характеристики
+                    </button>
+                    <button class="entities-tab" data-tab="options">
+                        <span class="material-symbols-outlined">list</span>
+                        Опції
+                    </button>
+                </div>
+
+                <!-- Tab Content -->
+                <div class="entities-tab-content">
+                    <!-- Categories Tab -->
+                    <div class="entities-tab-pane is-active" data-tab-pane="categories">
+                        <div class="entities-toolbar">
+                            <button id="btn-add-category" class="btn-primary">
+                                <span class="material-symbols-outlined">add</span>
+                                Додати категорію
+                            </button>
+                        </div>
+                        <div class="entities-table-wrapper">
+                            <table class="entities-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Назва</th>
+                                        <th>Дії</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="categories-tbody">
+                                    <tr>
+                                        <td colspan="3" class="loading-state">Завантаження категорій...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Characteristics Tab -->
+                    <div class="entities-tab-pane" data-tab-pane="characteristics">
+                        <div class="entities-toolbar">
+                            <button id="btn-add-characteristic" class="btn-primary">
+                                <span class="material-symbols-outlined">add</span>
+                                Додати характеристику
+                            </button>
+                        </div>
+                        <div class="entities-table-wrapper">
+                            <table class="entities-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Назва</th>
+                                        <th>Категорія</th>
+                                        <th>Дії</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="characteristics-tbody">
+                                    <tr>
+                                        <td colspan="4" class="loading-state">Завантаження характеристик...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Options Tab -->
+                    <div class="entities-tab-pane" data-tab-pane="options">
+                        <div class="entities-toolbar">
+                            <button id="btn-add-option" class="btn-primary">
+                                <span class="material-symbols-outlined">add</span>
+                                Додати опцію
+                            </button>
+                        </div>
+                        <div class="entities-table-wrapper">
+                            <table class="entities-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Назва</th>
+                                        <th>Характеристика</th>
+                                        <th>Дії</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="options-tbody">
+                                    <tr>
+                                        <td colspan="4" class="loading-state">Завантаження опцій...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <aside id="panel-right" class="panel panel-right">
+        <div class="panel-header">
+            <button id="btn-panel-right-toggle" class="btn-icon" aria-label="Згорнути панель">
+                <span class="material-symbols-outlined">keyboard_arrow_left</span>
+            </button>
+        </div>
+        <div id="panel-right-content" class="panel-content"></div>
+    </aside>
+
+    <script type="module" src="js/main-entities.js"></script>
+
+</body>
+
+</html>

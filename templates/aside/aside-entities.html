@@ -1,0 +1,46 @@
+<!-- templates/aside/aside-entities.html -->
+
+<div class="panel-content-scroll">
+
+    <div class="panel-section">
+        <h3 class="panel-section-title">Пошук</h3>
+        <div class="form-group">
+            <input
+                type="text"
+                id="entities-search"
+                class="input-main"
+                placeholder="Пошук за назвою..."
+            >
+        </div>
+    </div>
+
+    <div class="panel-separator"></div>
+
+    <div class="panel-section">
+        <h3 class="panel-section-title">Фільтри</h3>
+
+        <div class="form-group">
+            <label class="form-label">Категорія</label>
+            <select id="filter-category" class="input-main">
+                <option value="">Всі категорії</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">Характеристика</label>
+            <select id="filter-characteristic" class="input-main">
+                <option value="">Всі характеристики</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="panel-separator"></div>
+
+    <div class="panel-section">
+        <button id="btn-delete-selected" class="btn-danger" style="width: 100%;" disabled>
+            <span class="material-symbols-outlined">delete</span>
+            Видалити обране
+        </button>
+    </div>
+
+</div>
