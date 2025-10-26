@@ -15,14 +15,13 @@
  * 5. Після побудови автоматично ініціалізується логіка вкладок (табів).
  */
 
+// js/common/ui-modal.js
+
 import { initTabs } from './ui-tabs.js';
 
 let modalWrapper = null;
 const modalTemplateCache = new Map();
 
-/**
- * Створює базову структуру модального вікна в DOM, якщо її ще немає.
- */
 function createModalStructure() {
     if (document.getElementById('global-modal-wrapper')) return;
 
@@ -40,7 +39,6 @@ function createModalStructure() {
     `;
     document.body.appendChild(modalWrapper);
 
-    // Закриття по кліку на оверлей
     modalWrapper.addEventListener('click', (e) => {
         if (e.target === modalWrapper) {
             closeModal();
@@ -50,33 +48,30 @@ function createModalStructure() {
 
 /**
  * Завантажує та відображає модальне вікно.
- * @param {string} modalId - Ідентифікатор модального вікна (відповідає назві файлу).
+ * @param {string} modalId - Ідентифікатор модального вікна
+ * @param {HTMLElement} triggerElement - Елемент що викликав modal
  */
-export async function showModal(modalId) {
+export async function showModal(modalId, triggerElement = null) {
     if (!modalWrapper) createModalStructure();
 
     try {
         let templateHtml;
-        // Перевіряємо, чи є шаблон у кеші
         if (modalTemplateCache.has(modalId)) {
             templateHtml = modalTemplateCache.get(modalId);
         } else {
-            // Якщо немає - завантажуємо і зберігаємо в кеш
             const response = await fetch(`/templates/modals/${modalId}.html`);
             if (!response.ok) throw new Error(`Не вдалося завантажити шаблон: ${modalId}`);
             templateHtml = await response.text();
-            modalTemplateCache.set(modalId, templateHtml); // Зберігаємо
+            modalTemplateCache.set(modalId, templateHtml);
         }
 
         const parser = new DOMParser();
         const doc = parser.parseFromString(templateHtml, 'text/html');
 
-        // Знаходимо елементи для вставки
         const titleSource = doc.querySelector('.modal-title-source')?.textContent || 'Заголовок';
         const headerActionsSource = doc.querySelector('.modal-header-actions-source');
         const bodySource = doc.querySelector('.modal-body-source');
 
-        // Наповнюємо структуру
         const titleTarget = modalWrapper.querySelector('.modal-title');
         const headerActionsTarget = modalWrapper.querySelector('#modal-header-actions');
         const bodyTarget = modalWrapper.querySelector('.modal-body');
@@ -85,53 +80,52 @@ export async function showModal(modalId) {
         headerActionsTarget.innerHTML = headerActionsSource?.innerHTML || '';
         bodyTarget.innerHTML = bodySource?.innerHTML || '<p>Помилка: вміст не знайдено.</p>';
         
-        // Додаємо обов'язкову кнопку закриття
         const closeButton = document.createElement('button');
         closeButton.className = 'segment modal-close-btn';
         closeButton.innerHTML = `<div class="btn-icon state-layer"><span class="material-symbols-outlined">close</span></div>`;
         closeButton.onclick = closeModal;
         headerActionsTarget.appendChild(closeButton);
 
-        // Показуємо модальне вікно
         document.body.classList.add('is-modal-open');
         modalWrapper.classList.add('is-open');
         
-        // Ініціалізуємо вкладки всередині нового контенту
         initTabs(bodyTarget);
+
+        // ДОДАНО: Диспатчимо custom event після відкриття модалу
+        const modalOpenEvent = new CustomEvent('modal-opened', {
+            detail: {
+                modalId: modalId,
+                trigger: triggerElement,
+                bodyTarget: bodyTarget
+            }
+        });
+        document.dispatchEvent(modalOpenEvent);
 
     } catch (error) {
         console.error('Помилка при відображенні модального вікна:', error);
     }
 }
 
-/**
- * Закриває активне модальне вікно.
- */
 function closeModal() {
     if (!modalWrapper) return;
     document.body.classList.remove('is-modal-open');
     modalWrapper.classList.remove('is-open');
 }
 
-/**
- * Ініціалізує глобальні слухачі для модальних вікон.
- */
 export function initModals() {
     document.addEventListener('click', (e) => {
         const trigger = e.target.closest('[data-modal-trigger]');
         if (trigger) {
             e.preventDefault();
             const modalId = trigger.dataset.modalTrigger;
-            showModal(modalId);
+            showModal(modalId, trigger); // Передаємо trigger
         }
 
-        // === ДОДАНО: Обробка кнопок закриття всередині модалу ===
         const closeTrigger = e.target.closest('[data-modal-close]');
         if (closeTrigger && closeTrigger.closest('.modal-container')) {
              e.preventDefault();
              closeModal();
         }
-        // ========================================================
     });
 
     document.addEventListener('keydown', (e) => {
