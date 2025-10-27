@@ -1,8 +1,7 @@
 // js/main-entities.js
 import { initCore } from './main-core.js';
-
-// Імпортуємо головний файл генератора entities
 import './generators/generator-entities/ge-init.js';
+
 
 async function initializeApp() {
     try {
