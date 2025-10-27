@@ -20,6 +20,7 @@
 
 <body>
 
+    <!-- ЛІВА ПАНЕЛЬ: НАВІГАЦІЯ -->
     <nav id="panel-left" class="panel panel-left">
         <div class="panel-content-scroll">
             
@@ -55,8 +56,10 @@
         </div>
     </nav>
 
-    <main id="content-main" class="content-main">
+    <!-- ГОЛОВНА ЧАСТИНА: ТАБИ + ТАБЛИЦІ -->
+    <main id="content-main" class="content-main" data-panel-template="aside-entities">
         
+        <!-- ЗАГОЛОВОК СЕКЦІЇ -->
         <div class="section-header">
             <div class="section-name-block">
                 <div class="section-name">
@@ -73,29 +76,33 @@
                     <span class="material-symbols-outlined">add</span>
                     Додати
                 </button>
-                <button id="btn-refresh-data" class="btn-icon" aria-label="Оновити дані">
+                <button id="btn-reload" class="btn-icon" aria-label="Оновити дані">
                     <span class="material-symbols-outlined">refresh</span>
                 </button>
             </div>
         </div>
 
-        <div class="tabs-container">
+        <!-- КОНТЕЙНЕР ТАБІВ -->
+        <div class="tabs-container" data-tabs-container>
+            
+            <!-- КНОПКИ ТАБІВ -->
             <div class="tabs-header">
-                <button class="tab-button active" data-tab="categories" >
+                <button class="tab-button is-active" data-tab-target="categories">
                     <span class="material-symbols-outlined">category</span>
                     Категорії
                 </button>
-                <button class="tab-button" data-tab="characteristics">
+                <button class="tab-button" data-tab-target="characteristics">
                     <span class="material-symbols-outlined">tune</span>
                     Характеристики
                 </button>
-                <button class="tab-button" data-tab="options">
+                <button class="tab-button" data-tab-target="options">
                     <span class="material-symbols-outlined">list</span>
                     Опції
                 </button>
             </div>
 
-            <div class="tab-content active" data-tab-content="categories" data-panel-template="aside-categories">
+            <!-- ТАБ 1: КАТЕГОРІЇ -->
+            <div class="tab-content active" data-tab-content="categories">
                 <div id="categories-table-container" class="table-wrapper">
                     <table class="entities-table">
                         <thead>
@@ -123,6 +130,7 @@
                 </div>
             </div>
 
+            <!-- ТАБ 2: ХАРАКТЕРИСТИКИ -->
             <div class="tab-content" data-tab-content="characteristics">
                 <div id="characteristics-table-container" class="table-wrapper">
                     <table class="entities-table">
@@ -153,6 +161,7 @@
                 </div>
             </div>
 
+            <!-- ТАБ 3: ОПЦІЇ -->
             <div class="tab-content" data-tab-content="options">
                 <div id="options-table-container" class="table-wrapper">
                     <table class="entities-table">
@@ -179,10 +188,12 @@
                     </table>
                 </div>
             </div>
+
         </div>
 
     </main>
 
+    <!-- ПРАВА ПАНЕЛЬ: ФІЛЬТРИ та ПОШУК -->
     <aside id="panel-right" class="panel panel-right">
         <div class="panel-header">
             <button id="btn-panel-right-toggle" class="btn-icon" aria-label="Згорнути панель">
@@ -190,10 +201,11 @@
             </button>
         </div>
         <div id="panel-right-content" class="panel-content">
-            </div>
+            <!-- Тут буде завантажуватись шаблон aside-entities.html -->
+        </div>
     </aside>
 
-<script type="module" src="js/main-entities.js"></script>
+    <script type="module" src="js/main-entities.js"></script>
 
 </body>
 
