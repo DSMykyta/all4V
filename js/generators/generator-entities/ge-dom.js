@@ -1,39 +1,24 @@
 // js/generators/generator-entities/ge-dom.js
 
 /**
- * Повертає всі DOM елементи сторінки entities
+ * Кешування DOM-елементів для генератора сутностей
  */
-export function getEntitiesDOM() {
-    return {
-        // Панелі
-        panelLeft: document.getElementById('panel-left'),
-        panelRight: document.getElementById('panel-right'),
-        btnPanelLeftToggle: document.getElementById('btn-panel-left-toggle'),
-        btnPanelRightToggle: document.getElementById('btn-panel-right-toggle'),
+export const dom = {
+    // Tabs
+    tabs: document.querySelectorAll('.entities-tab'),
+    tabPanes: document.querySelectorAll('.entities-tab-pane'),
 
-        // Кнопки дій
-        btnAddEntity: document.getElementById('btn-add-entity'),
-        btnRefreshData: document.getElementById('btn-refresh-data'),
-        btnDeleteSelected: document.getElementById('btn-delete-selected'),
-        authBtn: document.getElementById('auth-btn'),
+    // Table bodies
+    categoriesTbody: document.getElementById('categories-tbody'),
+    characteristicsTbody: document.getElementById('characteristics-tbody'),
+    optionsTbody: document.getElementById('options-tbody'),
 
-        // Таби
-        tabButtons: document.querySelectorAll('.tab-button'),
-        tabContents: document.querySelectorAll('.tab-content'),
+    // Buttons
+    btnAddCategory: document.getElementById('btn-add-category'),
+    btnAddCharacteristic: document.getElementById('btn-add-characteristic'),
+    btnAddOption: document.getElementById('btn-add-option'),
+    btnReload: document.getElementById('reload-section-entities'),
 
-        // Таблиці
-        categoriesTbody: document.getElementById('categories-tbody'),
-        characteristicsTbody: document.getElementById('characteristics-tbody'),
-        optionsTbody: document.getElementById('options-tbody'),
-
-        // Чекбокси select-all
-        selectAllCategories: document.getElementById('select-all-categories'),
-        selectAllCharacteristics: document.getElementById('select-all-characteristics'),
-        selectAllOptions: document.getElementById('select-all-options'),
-
-        // Права панель
-        searchInput: document.getElementById('search-input'),
-        filtersContainer: document.getElementById('filters-container'),
-        selectedCount: document.getElementById('selected-count'),
-    };
-}
+    // Auth button
+    authBtn: document.getElementById('auth-btn'),
+};

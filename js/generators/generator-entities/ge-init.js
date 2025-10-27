@@ -1,79 +1,99 @@
 // js/generators/generator-entities/ge-init.js
 
-import { getEntitiesDOM } from './ge-dom.js';
+import { dom } from './ge-dom.js';
 import { fetchAllData } from './ge-data.js';
 import { renderCategories, renderCharacteristics, renderOptions } from './ge-render.js';
 import { initTabs } from './ge-tabs.js';
-import { initEventHandlers } from './ge-events.js';
-import { initPanels } from './ge-panels.js';
-import { loadHTML } from '../../common/util-loader.js';
-import { isUserAuthorized } from '../../auth/google-auth.js';
+import { initEvents } from './ge-events.js';
 
 /**
- * Ініціалізація Entities генератора
- * Викликається після ініціалізації core (включаючи авторизацію)
+ * Ініціалізація DOM елементів
  */
-async function initEntitiesGenerator() {
-    console.log('🚀 Ініціалізація генератора Entities...');
-
-    try {
-        const dom = getEntitiesDOM();
-
-        // 1. Завантажуємо aside панель
-        const panelContent = document.getElementById('panel-right-content');
-        if (panelContent) {
-            await loadHTML('templates/aside/aside-entities.html', panelContent);
-        }
-
-        // 2. Ініціалізуємо панелі
-        initPanels();
-
-        // 3. Ініціалізуємо таби
-        initTabs();
-
-        // 4. Ініціалізуємо обробники подій
-        initEventHandlers();
-
-        // 5. Якщо вже авторизовані - завантажуємо дані
-        if (isUserAuthorized()) {
-            await loadEntitiesData();
-        } else {
-            console.log('ℹ️ Очікування авторизації для завантаження даних...');
-            // Підписуємось на подію авторизації
-            window.addEventListener('google-auth-success', loadEntitiesData);
-        }
-
-        console.log('✅ Генератор Entities ініціалізовано');
-
-    } catch (error) {
-        console.error('❌ Помилка ініціалізації генератора Entities:', error);
-    }
+function initDOM() {
+    // Переініціалізуємо всі DOM елементи після завантаження HTML
+    dom.tabs = document.querySelectorAll('.entities-tab');
+    dom.tabPanes = document.querySelectorAll('.entities-tab-pane');
+    dom.categoriesTbody = document.getElementById('categories-tbody');
+    dom.characteristicsTbody = document.getElementById('characteristics-tbody');
+    dom.optionsTbody = document.getElementById('options-tbody');
+    dom.btnAddCategory = document.getElementById('btn-add-category');
+    dom.btnAddCharacteristic = document.getElementById('btn-add-characteristic');
+    dom.btnAddOption = document.getElementById('btn-add-option');
+    dom.btnReload = document.getElementById('reload-section-entities');
+    dom.authBtn = document.getElementById('auth-btn');
 }
 
 /**
- * Завантажує дані сутностей
+ * Завантажує дані та рендерить таблиці
  */
-async function loadEntitiesData() {
-    console.log('📊 Завантаження даних сутностей...');
-    
-    const dom = getEntitiesDOM();
-    
+async function loadData() {
     try {
         await fetchAllData();
 
+        // Рендеримо всі вкладки
         renderCategories(dom.categoriesTbody);
         renderCharacteristics(dom.characteristicsTbody);
         renderOptions(dom.optionsTbody);
 
-        console.log('✅ Дані сутностей завантажено');
     } catch (error) {
-        console.error('❌ Помилка завантаження даних:', error);
+        console.error('Помилка завантаження даних:', error);
+
+        // Показуємо помилку в таблицях
+        const errorMessage = `
+            <tr>
+                <td colspan="3" class="error-state">
+                    <span class="material-symbols-outlined">error</span>
+                    <p>Помилка завантаження даних</p>
+                    <small>${error.message}</small>
+                </td>
+            </tr>
+        `;
+
+        dom.categoriesTbody.innerHTML = errorMessage;
+        dom.characteristicsTbody.innerHTML = errorMessage.replace('colspan="3"', 'colspan="4"');
+        dom.optionsTbody.innerHTML = errorMessage.replace('colspan="3"', 'colspan="4"');
     }
 }
 
-// Запускаємо після завантаження DOM
+/**
+ * Головна функція ініціалізації
+ */
+function init() {
+    // Спочатку ініціалізуємо DOM
+    initDOM();
+
+    // Ініціалізуємо вкладки
+    initTabs();
+
+    // Ініціалізуємо обробники подій
+    initEvents();
+
+    // Завантажуємо дані
+    const token = localStorage.getItem('google_auth_token');
+    if (token) {
+        loadData();
+    } else {
+        console.warn('⚠️ Користувач не авторизований');
+        const notAuthMessage = `
+            <tr>
+                <td colspan="3" class="empty-state">
+                    <span class="material-symbols-outlined">lock</span>
+                    <p>Авторизуйтесь для доступу до даних</p>
+                </td>
+            </tr>
+        `;
+
+        dom.categoriesTbody.innerHTML = notAuthMessage;
+        dom.characteristicsTbody.innerHTML = notAuthMessage.replace('colspan="3"', 'colspan="4"');
+        dom.optionsTbody.innerHTML = notAuthMessage.replace('colspan="3"', 'colspan="4"');
+    }
+
+    console.log('✅ Generator Entities ініціалізовано');
+}
+
+// Запускаємо ініціалізацію після завантаження DOM
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEntitiesGenerator);
+    document.addEventListener('DOMContentLoaded', init);
 } else {
-    initEntitiesGenerator();
+    init();
 }
