@@ -143,8 +143,6 @@ function parseSheetData(values, columns) {
     return parsed;
 }
 
-
-
 /**
  * Геттери для даних
  */

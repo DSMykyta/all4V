@@ -4,7 +4,7 @@ import { getEntitiesDOM } from './ge-dom.js';
 import { fetchAllData, deleteEntityFromSheet } from './ge-data.js';
 import { renderCategories, renderCharacteristics, renderOptions, updateSelectedCount, showLoadingState } from './ge-render.js';
 import { getCurrentTab, refreshCurrentTab } from './ge-tabs.js';
-import { isUserAuthorized, signIn } from '../../auth/google-auth.js';
+import { isUserAuthorized, signIn } from './ge-auth.js';
 
 /**
  * Ініціалізує всі обробники подій
@@ -81,13 +81,13 @@ async function handleRefreshData() {
         // Показуємо індикатор завантаження
         switch (currentTab) {
             case 'categories':
-                showLoadingState(dom.categoriesTbody, 3);
+                showLoadingState(dom.categoriesTbody, 7);
                 break;
             case 'characteristics':
-                showLoadingState(dom.characteristicsTbody, 4);
+                showLoadingState(dom.characteristicsTbody, 9);
                 break;
             case 'options':
-                showLoadingState(dom.optionsTbody, 4);
+                showLoadingState(dom.optionsTbody, 6);
                 break;
         }
 
