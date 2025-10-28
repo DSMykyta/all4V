@@ -1,0 +1,57 @@
+<div class="modal-title-source" style="display: none;">
+    Редагувати Категорію
+</div>
+
+<div class="modal-header-actions-source" style="display: none;">
+</div>
+
+<div class="modal-body-source">
+    <form id="form-edit-category" class="modal-form">
+        
+        <input type="hidden" id="edit-category-row-index">
+        
+        <div class="form-group">
+            <label for="edit-category-id">ID</label>
+            <input type="text" id="edit-category-id" class="input-main" readonly disabled>
+        </div>
+
+        <div class="form-group">
+            <label for="edit-category-parent-id">Батьківська категорія</label>
+            <select id="edit-category-parent-id" class="input-main">
+                <option value="">— Немає (коренева категорія) —</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="edit-category-name-ua">Назва (українською) <span class="required">*</span></label>
+            <input type="text" id="edit-category-name-ua" class="input-main" required>
+        </div>
+
+        <div class="form-group">
+            <label for="edit-category-name-ru">Назва (російською)</label>
+            <input type="text" id="edit-category-name-ru" class="input-main">
+        </div>
+
+        <div class="form-group">
+            <label for="edit-category-type">Тип категорії <span class="required">*</span></label>
+            <select id="edit-category-type" class="input-main" required>
+                <option value="">— Оберіть тип —</option>
+                <option value="product">Товар (product)</option>
+                <option value="service">Послуга (service)</option>
+                <option value="digital">Цифровий товар (digital)</option>
+            </select>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" data-modal-close class="btn-secondary">
+                <span class="material-symbols-outlined">close</span>
+                Скасувати
+            </button>
+            <button type="submit" class="btn-primary">
+                <span class="material-symbols-outlined">save</span>
+                Зберегти
+            </button>
+        </div>
+
+    </form>
+</div>
