@@ -1,13 +1,5 @@
 // js/generators/generator-entities/ge-dom.js
 
-/**
- * ╔══════════════════════════════════════════════════════════════════════════╗
- * ║                   КЕШУВАННЯ DOM ЕЛЕМЕНТІВ СУТНОСТЕЙ                      ║
- * ╚══════════════════════════════════════════════════════════════════════════╝
- * Зберігає посилання на всі DOM елементи для швидкого доступу.
- * Викликається один раз при ініціалізації.
- */
-
 export const dom = {
     // ═══════════════════════════════════════════════════════════════════════
     // ТАБИ
@@ -22,6 +14,7 @@ export const dom = {
     categoriesTbody: null,
     characteristicsTbody: null,
     optionsTbody: null,
+    // 🔴 ВИДАЛЕНО: marketplacesTbody: null,
 
     // ═══════════════════════════════════════════════════════════════════════
     // ЧЕКБОКСИ "ВИБРАТИ ВСІ"
@@ -29,6 +22,7 @@ export const dom = {
     selectAllCategories: null,
     selectAllCharacteristics: null,
     selectAllOptions: null,
+    // 🔴 ВИДАЛЕНО: selectAllMarketplaces: null,
 
     // ═══════════════════════════════════════════════════════════════════════
     // КНОПКИ УПРАВЛІННЯ
@@ -49,7 +43,6 @@ export const dom = {
 
 /**
  * Ініціалізує всі DOM елементи
- * Викликається після завантаження DOM
  */
 export function initDOM() {
     // Таби
@@ -61,11 +54,13 @@ export function initDOM() {
     dom.categoriesTbody = document.getElementById('categories-tbody');
     dom.characteristicsTbody = document.getElementById('characteristics-tbody');
     dom.optionsTbody = document.getElementById('options-tbody');
+    // 🔴 ВИДАЛЕНО: dom.marketplacesTbody = document.getElementById('marketplaces-tbody');
 
     // Чекбокси
     dom.selectAllCategories = document.getElementById('select-all-categories');
     dom.selectAllCharacteristics = document.getElementById('select-all-characteristics');
     dom.selectAllOptions = document.getElementById('select-all-options');
+    // 🔴 ВИДАЛЕНО: dom.selectAllMarketplaces = document.getElementById('select-all-marketplaces');
 
     // Кнопки
     dom.btnAddEntity = document.getElementById('btn-add-entity');
@@ -76,6 +71,9 @@ export function initDOM() {
     dom.panelRight = document.getElementById('panel-right');
     dom.panelRightContent = document.getElementById('panel-right-content');
 
+    // Ініціалізація табів
+    initTabs();
+
     console.log('✅ DOM елементи сутностей ініціалізовано:', {
         tabs: dom.tabButtons?.length || 0,
         tabContents: dom.tabContents?.length || 0,
@@ -83,6 +81,7 @@ export function initDOM() {
             dom.categoriesTbody ? '✓' : '✗',
             dom.characteristicsTbody ? '✓' : '✗',
             dom.optionsTbody ? '✓' : '✗'
+            // 🔴 ВИДАЛЕНО: dom.marketplacesTbody ? '✓' : '✗'
         ],
         buttons: [
             dom.btnAddEntity ? '✓' : '✗',
@@ -92,11 +91,37 @@ export function initDOM() {
 }
 
 /**
- * Оновлює посилання на динамічні елементи (після завантаження шаблонів)
- * Викликається після завантаження aside-entities.html
+ * Ініціалізація системи табів
+ */
+function initTabs() {
+    if (!dom.tabButtons) return;
+
+    dom.tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetTab = button.dataset.tabTarget;
+            
+            // Оновлюємо активний таб
+            dom.tabButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Показуємо відповідний контент
+            dom.tabContents.forEach(content => {
+                if (content.dataset.tabContent === targetTab) {
+                    content.classList.add('is-active');
+                } else {
+                    content.classList.remove('is-active');
+                }
+            });
+
+            console.log(`🔄 Переключено на таб: ${targetTab}`);
+        });
+    });
+}
+
+/**
+ * Оновлює посилання на динамічні елементи
  */
 export function updateDynamicDOM() {
-    // Оновлюємо елементи з правої панелі (вони завантажуються динамічно)
     dom.searchInput = document.getElementById('search-input');
     dom.btnDeleteSelected = document.getElementById('btn-delete-selected');
     dom.selectedCount = document.getElementById('selected-count');
@@ -129,6 +154,7 @@ export function getActiveTbody() {
             return dom.characteristicsTbody;
         case 'options':
             return dom.optionsTbody;
+        // 🔴 ВИДАЛЕНО: case 'marketplaces':
         default:
             return dom.categoriesTbody;
     }
@@ -147,7 +173,12 @@ export function getActiveSheetName() {
             return 'Characteristics';
         case 'options':
             return 'Options';
+        // 🔴 ВИДАЛЕНО: case 'marketplaces':
         default:
             return 'Categories';
     }
+}
+
+export function getEntitiesDOM() {
+    return dom;
 }

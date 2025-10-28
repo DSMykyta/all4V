@@ -66,10 +66,13 @@ function handleAddEntity() {
         case 'options':
             openAddOptionModal();
             break;
+        // 🔴 ВИДАЛЕНО: case 'marketplaces':
         default:
             console.warn('⚠️ Невідомий активний таб:', activeTab);
     }
 }
+
+
 
 /**
  * Обробляє натискання кнопки "Редагувати"
@@ -88,10 +91,13 @@ function handleEditEntity(entityId) {
         case 'options':
             openEditOptionModal(entityId);
             break;
+        // 🔴 ВИДАЛЕНО: case 'marketplaces':
         default:
             console.warn('⚠️ Невідомий активний таб:', activeTab);
     }
 }
+
+
 
 /**
  * Обробляє натискання кнопки "Видалити"
@@ -119,7 +125,9 @@ async function handleDeleteEntity(entityId, rowIndex) {
             case 'options':
                 sheetName = 'Options';
                 break;
+            // 🔴 ВИДАЛЕНО: case 'marketplaces':
         }
+
 
         await deleteEntity(sheetName, rowIndex);
         showToast(`Сутність ${entityId} успішно видалено`, 'success');

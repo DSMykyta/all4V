@@ -5,6 +5,19 @@ import { fetchAllData } from './ge-data.js';
 import { renderAllTables, showAuthRequiredState } from './ge-render.js';
 import { initEvents } from './ge-events.js';
 import { initFilters } from './ge-filters.js';
+import { openMarketplacesAdminModal } from './ge-marketplaces-admin.js';
+
+// ТИМЧАСОВИЙ ТЕСТ
+window.testModalOpen = function() {
+    console.log('🧪 TEST: Пряме відкриття модалу...');
+    const modal = document.getElementById('modal-marketplaces-admin');
+    console.log('🧪 TEST: Модал знайдено:', modal);
+    if (modal) {
+        modal.style.display = 'flex';
+        console.log('🧪 TEST: Модал відкрито!');
+    }
+};
+
 
 /**
  * Головна функція ініціалізації
@@ -17,6 +30,9 @@ async function init() {
 
     // Крок 2: Ініціалізуємо обробники подій
     initEvents();
+
+    // 🆕 Крок 2.5: Ініціалізація кнопки маркетплейсів
+    initMarketplacesButton();
 
     // Крок 3: Чекаємо на ініціалізацію Google API (затримка 2 секунди)
     setTimeout(async () => {
@@ -47,6 +63,52 @@ async function init() {
 
     console.log('✅ Generator Entities ініціалізовано');
 }
+
+// 🆕 ДОДАНО: Функція ініціалізації кнопки маркетплейсів
+function initMarketplacesButton() {
+    console.log('🔍 Початок ініціалізації кнопки маркетплейсів...');
+    
+    const btn = document.getElementById('btn-marketplaces-admin');
+    
+    console.log('🔍 Кнопка знайдена:', btn);
+    
+    if (!btn) {
+        console.warn('⚠️ Кнопка #btn-marketplaces-admin не знайдена');
+        return;
+    }
+
+    // Перевіряємо чи кнопка видима
+    const styles = window.getComputedStyle(btn);
+    console.log('🔍 Стилі кнопки:', {
+        display: styles.display,
+        visibility: styles.visibility,
+        pointerEvents: styles.pointerEvents,
+        opacity: styles.opacity
+    });
+
+    // Додаємо обробник
+    btn.addEventListener('click', (event) => {
+        console.log('🖱️ КЛІК ПО КНОПЦІ МАРКЕТПЛЕЙСІВ!', event);
+        console.log('🔍 Event target:', event.target);
+        console.log('🔍 Current target:', event.currentTarget);
+        
+        try {
+            console.log('🔍 Викликаємо openMarketplacesAdminModal...');
+            openMarketplacesAdminModal();
+        } catch (error) {
+            console.error('❌ ПОМИЛКА при виклику openMarketplacesAdminModal:', error);
+        }
+    }, true); // true = capture phase
+
+    // Додаємо ще один обробник для перевірки
+    btn.onclick = () => {
+        console.log('🖱️ ONCLICK СПРАЦЮВАВ!');
+    };
+
+    console.log('✅ Кнопка маркетплейсів ініціалізована');
+    console.log('🔍 Event listeners на кнопці:', getEventListeners ? getEventListeners(btn) : 'Неможливо перевірити');
+}
+
 
 /**
  * Завантажує дані сутностей з Google Sheets

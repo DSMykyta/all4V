@@ -365,3 +365,117 @@ export async function deleteEntity(sheetName, rowIndex) {
         throw error;
     }
 }
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🆕 СТВОРЕННЯ НОВОГО АРКУША В GOOGLE SHEETS
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+export async function createMarketplaceSheet(marketplaceId, headers = null) {
+    try {
+        const token = gapi.client.getToken()?.access_token;
+        if (!token) throw new Error('Немає токена авторизації');
+
+        const sheetTitle = `MP_${marketplaceId}`;
+        
+        console.log(`📄 Створення нового аркуша: ${sheetTitle}`);
+
+        // Стандартні заголовки для аркуша маркетплейсу
+        const defaultHeaders = headers || [
+            'ID характеристики',
+            'Назва характеристики',
+            'Тип параметра',
+            'Код атрибута',
+            'Суфікс',
+            'Префікс',
+            'Примітки'
+        ];
+
+        // Створюємо новий аркуш через batchUpdate
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}:batchUpdate`;
+        
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                requests: [
+                    {
+                        addSheet: {
+                            properties: {
+                                title: sheetTitle,
+                                gridProperties: {
+                                    rowCount: 1000,
+                                    columnCount: defaultHeaders.length,
+                                    frozenRowCount: 1 // Закріплюємо перший рядок (заголовки)
+                                },
+                                tabColor: {
+                                    red: 0.2,
+                                    green: 0.6,
+                                    blue: 1.0
+                                }
+                            }
+                        }
+                    }
+                ]
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Помилка створення аркуша: ${response.status} - ${errorText}`);
+        }
+
+        const result = await response.json();
+        const newSheetId = result.replies[0].addSheet.properties.sheetId;
+
+        console.log(`✅ Аркуш ${sheetTitle} створено з ID: ${newSheetId}`);
+
+        // Додаємо заголовки до нового аркуша
+        await addHeadersToSheet(sheetTitle, defaultHeaders);
+
+        return { sheetTitle, sheetId: newSheetId };
+
+    } catch (error) {
+        console.error('❌ Помилка створення аркуша маркетплейсу:', error);
+        throw error;
+    }
+}
+
+/**
+ * Додає заголовки до аркуша
+ */
+async function addHeadersToSheet(sheetTitle, headers) {
+    try {
+        const token = gapi.client.getToken()?.access_token;
+        if (!token) throw new Error('Немає токена авторизації');
+
+        const range = `${sheetTitle}!A1`;
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${encodeURIComponent(range)}?valueInputOption=RAW`;
+
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                values: [headers]
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Помилка додавання заголовків: ${response.status} - ${errorText}`);
+        }
+
+        console.log(`✅ Заголовки додано до аркуша ${sheetTitle}`);
+
+    } catch (error) {
+        console.error('❌ Помилка додавання заголовків:', error);
+        throw error;
+    }
+}

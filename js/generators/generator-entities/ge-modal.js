@@ -1,7 +1,7 @@
 // js/generators/generator-entities/ge-modal.js
 
 import { showModal } from '../../common/ui-modal.js';
-import { addEntity, updateEntity, getEntityById, getCategoriesData, getCharacteristicsData, getOptionsData } from './ge-data.js';
+import { addEntity, updateEntity, getEntityById, getCategoriesData, getCharacteristicsData, getOptionsData, createMarketplaceSheet } from './ge-data.js';
 import { renderAllTables } from './ge-render.js';
 import { showToast } from '../../common/ui-toast.js';
 
@@ -435,4 +435,83 @@ function generateOptionId() {
 function closeModalByButton(container) {
     const closeBtn = container.querySelector('[data-modal-close]');
     if (closeBtn) closeBtn.click();
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
+ * 🆕 МАРКЕТПЛЕЙСИ: ДОДАВАННЯ
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+export function openAddMarketplaceModal() {
+    const modal = document.getElementById('modal-add-marketplace');
+    if (!modal) {
+        console.error('❌ Модальне вікно #modal-add-marketplace не знайдено');
+        return;
+    }
+
+    // Показуємо модальне вікно
+    modal.style.display = 'flex';
+
+    // Обробник закриття
+    const closeButtons = modal.querySelectorAll('[data-modal-close]');
+    closeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            modal.style.display = 'none';
+            modal.querySelector('form').reset();
+        });
+    });
+
+    // Обробник форми
+    const form = modal.querySelector('#form-add-marketplace');
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        await handleAddMarketplaceSubmit(modal);
+    };
+}
+
+async function handleAddMarketplaceSubmit(modal) {
+    const marketplaceId = modal.querySelector('#marketplace-id').value.trim();
+    const displayName = modal.querySelector('#marketplace-name').value.trim();
+    const iconSvg = modal.querySelector('#marketplace-icon').value.trim();
+    const primaryColor = modal.querySelector('#marketplace-color').value.trim();
+    const createSheet = modal.querySelector('#marketplace-create-sheet').checked;
+
+    if (!marketplaceId || !displayName) {
+        showToast('Заповніть обов\'язкові поля', 'error');
+        return;
+    }
+
+    // Валідація ID (тільки латиниця, цифри та _)
+    if (!/^[a-z0-9_]+$/.test(marketplaceId)) {
+        showToast('ID може містити тільки латинські літери, цифри та _ ', 'error');
+        return;
+    }
+
+    try {
+        // Додаємо маркетплейс до аркуша Marketplaces
+        const values = [marketplaceId, displayName, iconSvg, primaryColor];
+        await addEntity('Marketplaces', values);
+
+        showToast('Маркетплейс успішно додано', 'success');
+
+        // Якщо потрібно створити окремий аркуш
+        if (createSheet) {
+            try {
+                const { sheetTitle } = await createMarketplaceSheet(marketplaceId);
+                showToast(`Аркуш "${sheetTitle}" створено`, 'success');
+            } catch (sheetError) {
+                console.error('❌ Помилка створення аркуша:', sheetError);
+                showToast('Маркетплейс додано, але не вдалося створити аркуш', 'warning');
+            }
+        }
+
+        renderAllTables();
+        modal.style.display = 'none';
+        modal.querySelector('form').reset();
+
+    } catch (error) {
+        console.error('❌ Помилка додавання маркетплейсу:', error);
+        showToast('Помилка додавання маркетплейсу', 'error');
+    }
 }

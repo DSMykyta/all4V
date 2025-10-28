@@ -4,13 +4,14 @@
  * ╔══════════════════════════════════════════════════════════════════════════╗
  * ║                   РЕНДЕРИНГ ТАБЛИЦЬ СУТНОСТЕЙ                            ║
  * ╚══════════════════════════════════════════════════════════════════════════╝
- * Відповідає за:
- * - Відображення даних в таблицях
- * - Стани: завантаження, порожньо, помилка, дані
- * - Фільтрацію та сортування
  */
 
-import { getCategoriesData, getCharacteristicsData, getOptionsData } from './ge-data.js';
+import { 
+    getCategoriesData, 
+    getCharacteristicsData, 
+    getOptionsData, 
+    getMarketplacesData 
+} from './ge-data.js';
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
@@ -26,7 +27,6 @@ export function renderCategories(tbody, filteredData = null) {
         return;
     }
 
-    // Якщо немає даних
     if (categories.length === 0) {
         tbody.innerHTML = `
             <tr class="empty-state">
@@ -42,7 +42,6 @@ export function renderCategories(tbody, filteredData = null) {
         return;
     }
 
-    // Рендеримо дані
     tbody.innerHTML = categories.map(cat => `
         <tr data-entity-id="${cat.local_id}" data-row-index="${cat._rowIndex}">
             <td>
@@ -83,7 +82,6 @@ export function renderCharacteristics(tbody, filteredData = null) {
         return;
     }
 
-    // Якщо немає даних
     if (characteristics.length === 0) {
         tbody.innerHTML = `
             <tr class="empty-state">
@@ -99,7 +97,6 @@ export function renderCharacteristics(tbody, filteredData = null) {
         return;
     }
 
-    // Рендеримо дані
     tbody.innerHTML = characteristics.map(char => `
         <tr data-entity-id="${char.local_id}" data-row-index="${char._rowIndex}">
             <td>
@@ -146,7 +143,6 @@ export function renderOptions(tbody, filteredData = null) {
         return;
     }
 
-    // Якщо немає даних
     if (options.length === 0) {
         tbody.innerHTML = `
             <tr class="empty-state">
@@ -162,7 +158,6 @@ export function renderOptions(tbody, filteredData = null) {
         return;
     }
 
-    // Рендеримо дані
     tbody.innerHTML = options.map(opt => `
         <tr data-entity-id="${opt.local_id}" data-row-index="${opt._rowIndex}">
             <td>
@@ -190,13 +185,75 @@ export function renderOptions(tbody, filteredData = null) {
 
 /**
  * ═══════════════════════════════════════════════════════════════════════════
+ * РЕНДЕРИНГ МАРКЕТПЛЕЙСІВ
+ * ═══════════════════════════════════════════════════════════════════════════
+ */
+
+export function renderMarketplaces(tbody, filteredData = null) {
+    const marketplaces = filteredData || getMarketplacesData();
+    
+    if (!tbody) {
+        console.error('❌ tbody для маркетплейсів не знайдено');
+        return;
+    }
+
+    if (marketplaces.length === 0) {
+        tbody.innerHTML = `
+            <tr class="empty-state">
+                <td colspan="6">
+                    <div class="empty-state">
+                        <span class="material-symbols-outlined">store</span>
+                        <h3>Немає маркетплейсів</h3>
+                        <p>Додайте перший маркетплейс, щоб почати</p>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = marketplaces.map(mp => `
+        <tr data-entity-id="${mp.marketplace_id}" data-row-index="${mp._rowIndex}">
+            <td>
+                <input type="checkbox" class="row-checkbox" data-id="${mp.marketplace_id}" aria-label="Вибрати">
+            </td>
+            <td><code>${escapeHtml(mp.marketplace_id)}</code></td>
+            <td>${escapeHtml(mp.display_name) || '<em style="color: var(--text-disabled);">—</em>'}</td>
+            <td style="text-align: center;">
+                ${mp.icon_svg 
+                    ? `<div style="width: 24px; height: 24px; display: inline-block;">${mp.icon_svg}</div>` 
+                    : '<em style="color: var(--text-disabled);">—</em>'}
+            </td>
+            <td>
+                ${mp.primary_color 
+                    ? `<div style="display: flex; align-items: center; gap: 8px;">
+                        <div style="width: 20px; height: 20px; background: ${escapeHtml(mp.primary_color)}; border-radius: 4px; border: 1px solid var(--border-color);"></div>
+                        <code>${escapeHtml(mp.primary_color)}</code>
+                       </div>` 
+                    : '<em style="color: var(--text-disabled);">—</em>'}
+            </td>
+            <td>
+                <div class="table-actions">
+                    <button class="btn-icon btn-edit" data-action="edit" data-id="${mp.marketplace_id}" title="Редагувати">
+                        <span class="material-symbols-outlined">edit</span>
+                    </button>
+                    <button class="btn-icon btn-delete" data-action="delete" data-id="${mp.marketplace_id}" data-row="${mp._rowIndex}" title="Видалити">
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
+            </td>
+        </tr>
+    `).join('');
+
+    console.log(`✅ Відображено ${marketplaces.length} маркетплейсів`);
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════════════
  * СТАНИ ЗАВАНТАЖЕННЯ
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-/**
- * Показує індикатор завантаження
- */
 export function showLoadingState(tbody, colspan = 7) {
     if (!tbody) return;
     
@@ -210,9 +267,6 @@ export function showLoadingState(tbody, colspan = 7) {
     `;
 }
 
-/**
- * Показує стан помилки
- */
 export function showErrorState(tbody, errorMessage = 'Помилка завантаження даних', colspan = 7) {
     if (!tbody) return;
     
@@ -227,9 +281,6 @@ export function showErrorState(tbody, errorMessage = 'Помилка заван�
     `;
 }
 
-/**
- * Показує стан "не авторизовано"
- */
 export function showAuthRequiredState(tbody, colspan = 7) {
     if (!tbody) return;
     
@@ -254,9 +305,6 @@ export function showAuthRequiredState(tbody, colspan = 7) {
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-/**
- * Екранує HTML для безпеки (запобігає XSS)
- */
 function escapeHtml(text) {
     if (!text) return '';
     const map = {
@@ -269,9 +317,6 @@ function escapeHtml(text) {
     return String(text).replace(/[&<>"']/g, m => map[m]);
 }
 
-/**
- * Оновлює лічильник вибраних елементів
- */
 export function updateSelectedCount() {
     const selectedCountEl = document.getElementById('selected-count');
     if (!selectedCountEl) return;
@@ -284,9 +329,6 @@ export function updateSelectedCount() {
         : `Вибрано: ${count} ${getWordEnding(count)}`;
 }
 
-/**
- * Допоміжна функція для правильного закінчення слова (елемент/елементи/елементів)
- */
 function getWordEnding(count) {
     const lastDigit = count % 10;
     const lastTwoDigits = count % 100;
@@ -313,10 +355,12 @@ export function renderAllTables() {
     const categoriesTbody = document.getElementById('categories-tbody');
     const characteristicsTbody = document.getElementById('characteristics-tbody');
     const optionsTbody = document.getElementById('options-tbody');
+    // 🔴 ВИДАЛЕНО: const marketplacesTbody = document.getElementById('marketplaces-tbody');
 
     renderCategories(categoriesTbody);
     renderCharacteristics(characteristicsTbody);
     renderOptions(optionsTbody);
+    // 🔴 ВИДАЛЕНО: renderMarketplaces(marketplacesTbody);
 
     console.log('✅ Всі таблиці перемальовано');
 }
