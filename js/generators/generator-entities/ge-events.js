@@ -1,64 +1,60 @@
 // js/generators/generator-entities/ge-events.js
 
-/**
- * ╔══════════════════════════════════════════════════════════════════════════╗
- * ║                   ОБРОБНИКИ ПОДІЙ СУТНОСТЕЙ                              ║
- * ╚══════════════════════════════════════════════════════════════════════════╝
- * Відповідає за:
- * - Обробку кліків на кнопки (Додати, Оновити, Редагувати, Видалити)
- * - Делегування подій для динамічних елементів
- * - Взаємодію між модулями
- */
-
-import { dom, getActiveTab, getActiveSheetName } from './ge-dom.js';
-import { fetchAllData, deleteEntity } from './ge-data.js';
-import { renderAllTables, showLoadingState, updateSelectedCount } from './ge-render.js';
-import { 
-    openAddCategoryModal, 
+import { dom, getActiveTab } from './ge-dom.js';
+import { fetchAllData } from './ge-data.js';
+import { renderAllTables, showLoadingState } from './ge-render.js';
+import { showToast } from '../../common/ui-toast.js';
+import { deleteEntity } from './ge-data.js';
+import {
+    openAddCategoryModal,
     openEditCategoryModal,
     openAddCharacteristicModal,
     openEditCharacteristicModal,
     openAddOptionModal,
     openEditOptionModal
 } from './ge-modal.js';
-import { showToast } from '../../common/ui-toast.js';
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * ІНІЦІАЛІЗАЦІЯ ОБРОБНИКІВ
- * ═══════════════════════════════════════════════════════════════════════════
+ * Ініціалізує всі обробники подій
  */
-
 export function initEvents() {
+    console.log('🎯 Ініціалізація обробників подій...');
+
     // Кнопка "Додати"
     if (dom.btnAddEntity) {
         dom.btnAddEntity.addEventListener('click', handleAddEntity);
     }
 
-    // Кнопка "Оновити дані"
+    // Кнопка "Оновити"
     if (dom.btnReload) {
         dom.btnReload.addEventListener('click', handleReloadData);
     }
 
-    // Делегування подій для таблиць (редагувати, видалити)
-    document.addEventListener('click', handleTableActions);
+    // Делегування подій для кнопок в таблицях (edit, delete)
+    document.addEventListener('click', (e) => {
+        if (e.target.closest('.btn-edit-entity')) {
+            const btn = e.target.closest('.btn-edit-entity');
+            const entityId = btn.dataset.entityId;
+            handleEditEntity(entityId);
+        }
+
+        if (e.target.closest('.btn-delete-entity')) {
+            const btn = e.target.closest('.btn-delete-entity');
+            const entityId = btn.dataset.entityId;
+            const rowIndex = parseInt(btn.dataset.rowIndex);
+            handleDeleteEntity(entityId, rowIndex);
+        }
+    });
 
     console.log('✅ Обробники подій ініціалізовано');
 }
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * КНОПКА "ДОДАТИ"
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Обробник кнопки "Додати" - визначає активний таб і відкриває відповідне модальне вікно
+ * Обробляє натискання кнопки "Додати"
  */
 function handleAddEntity() {
     const activeTab = getActiveTab();
-    
-    console.log(`➕ Додати нову сутність в табі: ${activeTab}`);
+    console.log('➕ Додавання нової сутності, активний таб:', activeTab);
 
     switch (activeTab) {
         case 'categories':
@@ -71,94 +67,16 @@ function handleAddEntity() {
             openAddOptionModal();
             break;
         default:
-            console.warn('⚠️ Невідомий таб:', activeTab);
-            showToast('⚠️ Не вдалося визначити тип сутності', 'warning');
+            console.warn('⚠️ Невідомий активний таб:', activeTab);
     }
 }
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * КНОПКА "ОНОВИТИ ДАНІ"
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Обробник кнопки "Оновити дані"
- */
-async function handleReloadData() {
-    console.log('🔄 Оновлення даних...');
-
-    // Блокуємо кнопку
-    dom.btnReload.disabled = true;
-    const icon = dom.btnReload.querySelector('.material-symbols-outlined');
-    icon.classList.add('is-spinning');
-
-    // Показуємо індикатори завантаження в таблицях
-    showLoadingState(dom.categoriesTbody, 7);
-    showLoadingState(dom.characteristicsTbody, 9);
-    showLoadingState(dom.optionsTbody, 6);
-
-    try {
-        // Завантажуємо дані
-        await fetchAllData();
-        
-        // Рендеримо таблиці
-        renderAllTables();
-        
-        showToast('✅ Дані успішно оновлено', 'success');
-        console.log('✅ Дані оновлено');
-
-    } catch (error) {
-        console.error('❌ Помилка оновлення даних:', error);
-        showToast('❌ Помилка оновлення даних', 'error');
-    } finally {
-        // Розблоковуємо кнопку
-        dom.btnReload.disabled = false;
-        icon.classList.remove('is-spinning');
-    }
-}
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * ДЕЛЕГУВАННЯ ПОДІЙ ДЛЯ ТАБЛИЦЬ
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Універсальний обробник кліків в таблицях (делегування)
- */
-function handleTableActions(e) {
-    const button = e.target.closest('[data-action]');
-    if (!button) return;
-
-    const action = button.dataset.action;
-    const entityId = button.dataset.id;
-
-    switch (action) {
-        case 'edit':
-            handleEditEntity(entityId);
-            break;
-        case 'delete':
-            handleDeleteEntity(entityId, button.dataset.row);
-            break;
-        default:
-            console.warn('⚠️ Невідома дія:', action);
-    }
-}
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * РЕДАГУВАННЯ
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Обробник кнопки "Редагувати"
+ * Обробляє натискання кнопки "Редагувати"
  */
 function handleEditEntity(entityId) {
     const activeTab = getActiveTab();
-    
-    console.log(`✏️ Редагувати сутність: ${entityId} (таб: ${activeTab})`);
+    console.log('✏️ Редагування сутності:', entityId, 'таб:', activeTab);
 
     switch (activeTab) {
         case 'categories':
@@ -171,32 +89,18 @@ function handleEditEntity(entityId) {
             openEditOptionModal(entityId);
             break;
         default:
-            console.warn('⚠️ Невідомий таб:', activeTab);
-            showToast('⚠️ Не вдалося визначити тип сутності', 'warning');
+            console.warn('⚠️ Невідомий активний таб:', activeTab);
     }
 }
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * ВИДАЛЕННЯ
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Обробник кнопки "Видалити"
+ * Обробляє натискання кнопки "Видалити"
  */
 async function handleDeleteEntity(entityId, rowIndex) {
     const activeTab = getActiveTab();
-    const sheetName = getActiveSheetName();
+    console.log('🗑️ Видалення сутності:', entityId, 'рядок:', rowIndex);
 
-    console.log(`🗑️ Видалити сутність: ${entityId} (рядок: ${rowIndex}, таб: ${activeTab})`);
-
-    // Підтвердження
-    const confirmed = confirm(
-        `Ви впевнені, що хочете видалити цю сутність?\n\n` +
-        `ID: ${entityId}\n\n` +
-        `Ця дія незворотня!`
-    );
+    const confirmed = confirm(`Ви впевнені, що хочете видалити сутність ${entityId}?\nЦю дію не можна скасувати.`);
 
     if (!confirmed) {
         console.log('❌ Видалення скасовано користувачем');
@@ -204,100 +108,65 @@ async function handleDeleteEntity(entityId, rowIndex) {
     }
 
     try {
-        // Блокуємо кнопку видалення
-        const deleteBtn = document.querySelector(`[data-action="delete"][data-id="${entityId}"]`);
-        if (deleteBtn) {
-            deleteBtn.disabled = true;
+        let sheetName = '';
+        switch (activeTab) {
+            case 'categories':
+                sheetName = 'Categories';
+                break;
+            case 'characteristics':
+                sheetName = 'Characteristics';
+                break;
+            case 'options':
+                sheetName = 'Options';
+                break;
         }
 
-        // Видаляємо з Google Sheets
-        await deleteEntity(sheetName, parseInt(rowIndex));
-
-        // Перемальовуємо таблиці
+        await deleteEntity(sheetName, rowIndex);
+        showToast(`Сутність ${entityId} успішно видалено`, 'success');
         renderAllTables();
-
-        showToast('✅ Сутність успішно видалено', 'success');
-        console.log(`✅ Сутність ${entityId} видалено`);
 
     } catch (error) {
         console.error('❌ Помилка видалення:', error);
-        showToast('❌ Помилка видалення сутності', 'error');
-
-        // Розблоковуємо кнопку у разі помилки
-        const deleteBtn = document.querySelector(`[data-action="delete"][data-id="${entityId}"]`);
-        if (deleteBtn) {
-            deleteBtn.disabled = false;
-        }
+        showToast('Помилка видалення сутності', 'error');
     }
 }
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * ПЕРЕМИКАННЯ ТАБІВ
- * ═══════════════════════════════════════════════════════════════════════════
+ * Обробляє натискання кнопки "Оновити дані"
  */
+async function handleReloadData() {
+    console.log('🔄 Перезавантаження даних...');
 
-/**
- * Обробник перемикання табів
- * Оновлює текст кнопки "Додати" та очищає пошук
- */
-function handleTabSwitch(e) {
-    const tabButton = e.target.closest('[data-tab-target]');
-    if (!tabButton) return;
+    const activeTab = getActiveTab();
+    let tbody = null;
+    let colspan = 7;
 
-    const tabName = tabButton.dataset.tabTarget;
-    
-    console.log(`📑 Перемикання на таб: ${tabName}`);
-
-    // Оновлюємо текст кнопки "Додати" залежно від табу
-    updateAddButtonText(tabName);
-
-    // Очищаємо пошук при перемиканні табу
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) {
-        searchInput.value = '';
+    switch (activeTab) {
+        case 'categories':
+            tbody = dom.categoriesTbody;
+            colspan = 7;
+            break;
+        case 'characteristics':
+            tbody = dom.characteristicsTbody;
+            colspan = 9;
+            break;
+        case 'options':
+            tbody = dom.optionsTbody;
+            colspan = 6;
+            break;
     }
 
-    // Оновлюємо лічильник вибраних
-    setTimeout(() => {
-        updateSelectedCount();
-    }, 100);
-}
+    if (tbody) {
+        showLoadingState(tbody, colspan);
+    }
 
-/**
- * Оновлює текст кнопки "Додати" залежно від активного табу
- */
-function updateAddButtonText(tabName) {
-    if (!dom.btnAddEntity) return;
-
-    const textMap = {
-        'categories': 'Додати категорію',
-        'characteristics': 'Додати характеристику',
-        'options': 'Додати опцію'
-    };
-
-    const text = textMap[tabName] || 'Додати';
-    
-    // Оновлюємо текст (якщо є текстовий вузол)
-    const textNode = Array.from(dom.btnAddEntity.childNodes).find(
-        node => node.nodeType === Node.TEXT_NODE
-    );
-    
-    if (textNode) {
-        textNode.textContent = text;
+    try {
+        await fetchAllData();
+        renderAllTables();
+        showToast('Дані успішно оновлено', 'success');
+        console.log('✅ Дані оновлено');
+    } catch (error) {
+        console.error('❌ Помилка оновлення даних:', error);
+        showToast('Помилка оновлення даних', 'error');
     }
 }
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * ЕКСПОРТ ФУНКЦІЙ (для використання в інших модулях)
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-// Експортуємо функції, які можуть знадобитись іншим модулям
-export {
-    handleAddEntity,
-    handleReloadData,
-    handleEditEntity,
-    handleDeleteEntity
-};

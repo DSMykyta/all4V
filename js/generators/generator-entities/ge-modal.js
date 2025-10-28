@@ -1,465 +1,438 @@
 // js/generators/generator-entities/ge-modal.js
 
-/**
- * ╔══════════════════════════════════════════════════════════════════════════╗
- * ║                   МОДАЛЬНІ ВІКНА ДЛЯ СУТНОСТЕЙ                           ║
- * ╚══════════════════════════════════════════════════════════════════════════╝
- * Відповідає за:
- * - Створення форм для додавання нових сутностей
- * - Редагування існуючих сутностей
- * - Валідацію даних форм
- */
-
-import { addEntity, updateEntity, getEntityById } from './ge-data.js';
+import { showModal } from '../../common/ui-modal.js';
+import { addEntity, updateEntity, getEntityById, getCategoriesData, getCharacteristicsData, getOptionsData } from './ge-data.js';
 import { renderAllTables } from './ge-render.js';
 import { showToast } from '../../common/ui-toast.js';
 
 /**
- * ═══════════════════════════════════════════════════════════════════════════
- * МОДАЛЬНЕ ВІКНО ДЛЯ КАТЕГОРІЙ
- * ═══════════════════════════════════════════════════════════════════════════
+ * ╔══════════════════════════════════════════════════════════════════════════╗
+ * ║              МОДАЛЬНІ ВІКНА ДЛЯ КЕРУВАННЯ СУТНОСТЯМИ                    ║
+ * ╚══════════════════════════════════════════════════════════════════════════╝
+ * 
+ * Використовує існуючу систему ui-modal.js для відображення модальних вікон.
+ * Всі шаблони знаходяться в /templates/modals/entity-*.html
  */
 
-/**
- * Відкриває модальне вікно для додавання категорії
- */
+// ============================================================================
+// ВІДКРИТТЯ МОДАЛЬНИХ ВІКОН
+// ============================================================================
+
 export function openAddCategoryModal() {
-    const modal = createModal('Додати категорію', getCategoryFormHTML(), async (formData) => {
-        try {
-            const values = [
-                formData.local_id,
-                formData.parent_local_id,
-                formData.name_uk,
-                formData.name_ru,
-                formData.category_type
-            ];
-
-            await addEntity('Categories', values);
-            renderAllTables();
-            showToast('✅ Категорію успішно додано', 'success');
-            
-        } catch (error) {
-            console.error('❌ Помилка додавання категорії:', error);
-            showToast('❌ Помилка додавання категорії', 'error');
-            throw error;
-        }
-    });
-
-    showModal(modal);
+    showModal('entity-add-category');
 }
 
-/**
- * Відкриває модальне вікно для редагування категорії
- */
 export function openEditCategoryModal(id) {
-    const category = getEntityById('categories', id);
-    
-    if (!category) {
-        showToast('❌ Категорію не знайдено', 'error');
-        return;
-    }
-
-    const modal = createModal('Редагувати категорію', getCategoryFormHTML(category), async (formData) => {
-        try {
-            const values = [
-                formData.local_id,
-                formData.parent_local_id,
-                formData.name_uk,
-                formData.name_ru,
-                formData.category_type
-            ];
-
-            await updateEntity('Categories', category._rowIndex, values);
-            renderAllTables();
-            showToast('✅ Категорію успішно оновлено', 'success');
-            
-        } catch (error) {
-            console.error('❌ Помилка оновлення категорії:', error);
-            showToast('❌ Помилка оновлення категорії', 'error');
-            throw error;
-        }
-    });
-
-    showModal(modal);
+    showModal('entity-edit-category');
+    // Зберігаємо ID для подальшого використання після відкриття модалу
+    window._editEntityId = id;
 }
 
-/**
- * Генерує HTML форми для категорії
- */
-function getCategoryFormHTML(data = {}) {
-    return `
-        <div class="form-group">
-            <label for="modal-local-id">ID категорії *</label>
-            <input type="text" id="modal-local-id" name="local_id" 
-                   class="input-main" placeholder="cat_protein" 
-                   value="${data.local_id || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-parent-local-id">Батьківська категорія</label>
-            <input type="text" id="modal-parent-local-id" name="parent_local_id" 
-                   class="input-main" placeholder="cat_main" 
-                   value="${data.parent_local_id || ''}">
-        </div>
-
-        <div class="form-group">
-            <label for="modal-name-uk">Назва (українська) *</label>
-            <input type="text" id="modal-name-uk" name="name_uk" 
-                   class="input-main" placeholder="Протеїн" 
-                   value="${data.name_uk || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-name-ru">Назва (російська) *</label>
-            <input type="text" id="modal-name-ru" name="name_ru" 
-                   class="input-main" placeholder="Протеин" 
-                   value="${data.name_ru || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-category-type">Тип категорії</label>
-            <select id="modal-category-type" name="category_type" class="input-main">
-                <option value="">-- Оберіть тип --</option>
-                <option value="main" ${data.category_type === 'main' ? 'selected' : ''}>Головна</option>
-                <option value="sub" ${data.category_type === 'sub' ? 'selected' : ''}>Підкатегорія</option>
-                <option value="filter" ${data.category_type === 'filter' ? 'selected' : ''}>Фільтр</option>
-            </select>
-        </div>
-    `;
-}
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * МОДАЛЬНЕ ВІКНО ДЛЯ ХАРАКТЕРИСТИК
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Відкриває модальне вікно для додавання характеристики
- */
 export function openAddCharacteristicModal() {
-    const modal = createModal('Додати характеристику', getCharacteristicFormHTML(), async (formData) => {
-        try {
-            const values = [
-                formData.local_id,
-                formData.name_uk,
-                formData.name_ru,
-                formData.param_type,
-                formData.unit,
-                formData.filter_type,
-                formData.is_global,
-                formData.notes
-            ];
-
-            await addEntity('Characteristics', values);
-            renderAllTables();
-            showToast('✅ Характеристику успішно додано', 'success');
-            
-        } catch (error) {
-            console.error('❌ Помилка додавання характеристики:', error);
-            showToast('❌ Помилка додавання характеристики', 'error');
-            throw error;
-        }
-    });
-
-    showModal(modal);
+    showModal('entity-add-characteristic');
 }
 
-/**
- * Відкриває модальне вікно для редагування характеристики
- */
 export function openEditCharacteristicModal(id) {
-    const characteristic = getEntityById('characteristics', id);
-    
-    if (!characteristic) {
-        showToast('❌ Характеристику не знайдено', 'error');
-        return;
-    }
-
-    const modal = createModal('Редагувати характеристику', getCharacteristicFormHTML(characteristic), async (formData) => {
-        try {
-            const values = [
-                formData.local_id,
-                formData.name_uk,
-                formData.name_ru,
-                formData.param_type,
-                formData.unit,
-                formData.filter_type,
-                formData.is_global,
-                formData.notes
-            ];
-
-            await updateEntity('Characteristics', characteristic._rowIndex, values);
-            renderAllTables();
-            showToast('✅ Характеристику успішно оновлено', 'success');
-            
-        } catch (error) {
-            console.error('❌ Помилка оновлення характеристики:', error);
-            showToast('❌ Помилка оновлення характеристики', 'error');
-            throw error;
-        }
-    });
-
-    showModal(modal);
+    showModal('entity-edit-characteristic');
+    window._editEntityId = id;
 }
 
-/**
- * Генерує HTML форми для характеристики
- */
-function getCharacteristicFormHTML(data = {}) {
-    return `
-        <div class="form-group">
-            <label for="modal-local-id">ID характеристики *</label>
-            <input type="text" id="modal-local-id" name="local_id" 
-                   class="input-main" placeholder="char_weight" 
-                   value="${data.local_id || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-name-uk">Назва (українська) *</label>
-            <input type="text" id="modal-name-uk" name="name_uk" 
-                   class="input-main" placeholder="Вага" 
-                   value="${data.name_uk || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-name-ru">Назва (російська) *</label>
-            <input type="text" id="modal-name-ru" name="name_ru" 
-                   class="input-main" placeholder="Вес" 
-                   value="${data.name_ru || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-param-type">Тип параметра</label>
-            <select id="modal-param-type" name="param_type" class="input-main">
-                <option value="">-- Оберіть тип --</option>
-                <option value="text" ${data.param_type === 'text' ? 'selected' : ''}>Текст</option>
-                <option value="number" ${data.param_type === 'number' ? 'selected' : ''}>Число</option>
-                <option value="select" ${data.param_type === 'select' ? 'selected' : ''}>Вибір (select)</option>
-                <option value="multiselect" ${data.param_type === 'multiselect' ? 'selected' : ''}>Мультивибір</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-unit">Одиниця виміру</label>
-            <input type="text" id="modal-unit" name="unit" 
-                   class="input-main" placeholder="кг, мл, шт" 
-                   value="${data.unit || ''}">
-        </div>
-
-        <div class="form-group">
-            <label for="modal-filter-type">Тип фільтра</label>
-            <select id="modal-filter-type" name="filter_type" class="input-main">
-                <option value="">-- Оберіть тип --</option>
-                <option value="checkbox" ${data.filter_type === 'checkbox' ? 'selected' : ''}>Чекбокси</option>
-                <option value="range" ${data.filter_type === 'range' ? 'selected' : ''}>Діапазон</option>
-                <option value="none" ${data.filter_type === 'none' ? 'selected' : ''}>Без фільтра</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
-                <input type="checkbox" id="modal-is-global" name="is_global" 
-                       ${data.is_global === 'true' || data.is_global === true ? 'checked' : ''}>
-                <span>Глобальна характеристика</span>
-            </label>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-notes">Примітки</label>
-            <textarea id="modal-notes" name="notes" class="input-main" 
-                      rows="3" placeholder="Додаткова інформація...">${data.notes || ''}</textarea>
-        </div>
-    `;
-}
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * МОДАЛЬНЕ ВІКНО ДЛЯ ОПЦІЙ
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Відкриває модальне вікно для додавання опції
- */
 export function openAddOptionModal() {
-    const modal = createModal('Додати опцію', getOptionFormHTML(), async (formData) => {
-        try {
-            const values = [
-                formData.local_id,
-                formData.char_local_id,
-                formData.name_uk,
-                formData.name_ru
-            ];
-
-            await addEntity('Options', values);
-            renderAllTables();
-            showToast('✅ Опцію успішно додано', 'success');
-            
-        } catch (error) {
-            console.error('❌ Помилка додавання опції:', error);
-            showToast('❌ Помилка додавання опції', 'error');
-            throw error;
-        }
-    });
-
-    showModal(modal);
+    showModal('entity-add-option');
 }
 
-/**
- * Відкриває модальне вікно для редагування опції
- */
 export function openEditOptionModal(id) {
-    const option = getEntityById('options', id);
+    showModal('entity-edit-option');
+    window._editEntityId = id;
+}
+
+// ============================================================================
+// ОБРОБКА ПОДІЙ ПІСЛЯ ВІДКРИТТЯ МОДАЛІВ
+// ============================================================================
+
+document.addEventListener('modal-opened', (e) => {
+    const { modalId, bodyTarget } = e.detail;
     
-    if (!option) {
-        showToast('❌ Опцію не знайдено', 'error');
-        return;
+    switch(modalId) {
+        case 'entity-add-category':
+            handleAddCategoryModalOpened(bodyTarget);
+            break;
+        case 'entity-edit-category':
+            handleEditCategoryModalOpened(bodyTarget);
+            break;
+        case 'entity-add-characteristic':
+            handleAddCharacteristicModalOpened(bodyTarget);
+            break;
+        case 'entity-edit-characteristic':
+            handleEditCharacteristicModalOpened(bodyTarget);
+            break;
+        case 'entity-add-option':
+            handleAddOptionModalOpened(bodyTarget);
+            break;
+        case 'entity-edit-option':
+            handleEditOptionModalOpened(bodyTarget);
+            break;
     }
+});
 
-    const modal = createModal('Редагувати опцію', getOptionFormHTML(option), async (formData) => {
-        try {
-            const values = [
-                formData.local_id,
-                formData.char_local_id,
-                formData.name_uk,
-                formData.name_ru
-            ];
+// ============================================================================
+// КАТЕГОРІЇ: ДОДАВАННЯ
+// ============================================================================
 
-            await updateEntity('Options', option._rowIndex, values);
-            renderAllTables();
-            showToast('✅ Опцію успішно оновлено', 'success');
-            
-        } catch (error) {
-            console.error('❌ Помилка оновлення опції:', error);
-            showToast('❌ Помилка оновлення опції', 'error');
-            throw error;
-        }
-    });
-
-    showModal(modal);
-}
-
-/**
- * Генерує HTML форми для опції
- */
-function getOptionFormHTML(data = {}) {
-    return `
-        <div class="form-group">
-            <label for="modal-local-id">ID опції *</label>
-            <input type="text" id="modal-local-id" name="local_id" 
-                   class="input-main" placeholder="opt_vanilla" 
-                   value="${data.local_id || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-char-local-id">ID характеристики *</label>
-            <input type="text" id="modal-char-local-id" name="char_local_id" 
-                   class="input-main" placeholder="char_flavor" 
-                   value="${data.char_local_id || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-name-uk">Назва (українська) *</label>
-            <input type="text" id="modal-name-uk" name="name_uk" 
-                   class="input-main" placeholder="Ваніль" 
-                   value="${data.name_uk || ''}" required>
-        </div>
-
-        <div class="form-group">
-            <label for="modal-name-ru">Назва (російська) *</label>
-            <input type="text" id="modal-name-ru" name="name_ru" 
-                   class="input-main" placeholder="Ваниль" 
-                   value="${data.name_ru || ''}" required>
-        </div>
-    `;
-}
-
-/**
- * ═══════════════════════════════════════════════════════════════════════════
- * ДОПОМІЖНІ ФУНКЦІЇ
- * ═══════════════════════════════════════════════════════════════════════════
- */
-
-/**
- * Створює модальне вікно з формою
- */
-function createModal(title, formHTML, onSubmit) {
-    const modalId = `modal-entity-${Date.now()}`;
+function handleAddCategoryModalOpened(container) {
+    const form = container.querySelector('#form-add-category');
+    const parentSelect = container.querySelector('#category-parent-id');
     
-    const modalHTML = `
-        <div id="${modalId}" class="modal">
-            <div class="modal-overlay"></div>
-            <div class="modal-container">
-                <div class="modal-header">
-                    <h3>${title}</h3>
-                    <button class="btn-icon modal-close" aria-label="Закрити">
-                        <span class="material-symbols-outlined">close</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="${modalId}-form">
-                        ${formHTML}
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-secondary modal-close">Скасувати</button>
-                    <button type="submit" form="${modalId}-form" class="btn-primary">Зберегти</button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    // Додаємо модалку в body
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = modalHTML;
-    const modal = tempDiv.firstElementChild;
-    document.body.appendChild(modal);
-
-    // Обробник відправки форми
-    const form = modal.querySelector('form');
-    form.addEventListener('submit', async (e) => {
+    // Заповнюємо список батьківських категорій
+    populateParentCategoriesSelect(parentSelect);
+    
+    // Обробляємо submit форми
+    form.onsubmit = async (e) => {
         e.preventDefault();
         
-        const formData = new FormData(form);
-        const data = {};
+        const nameUa = container.querySelector('#category-name-ua').value.trim();
+        const nameRu = container.querySelector('#category-name-ru').value.trim();
+        const parentId = container.querySelector('#category-parent-id').value.trim();
+        const type = container.querySelector('#category-type').value.trim();
         
-        for (let [key, value] of formData.entries()) {
-            // Для чекбоксів
-            if (form.elements[key].type === 'checkbox') {
-                data[key] = form.elements[key].checked ? 'true' : 'false';
-            } else {
-                data[key] = value;
-            }
+        if (!nameUa || !type) {
+            showToast('Заповніть обов\'язкові поля', 'error');
+            return;
         }
-
+        
         try {
-            await onSubmit(data);
-            closeModal(modal);
+            // Генеруємо новий ID
+            const newId = generateCategoryId();
+            const values = [newId, parentId, nameUa, nameRu, type];
+            
+            await addEntity('Categories', values);
+            
+            showToast('Категорію успішно додано', 'success');
+            renderAllTables();
+            closeModalByButton(container);
+            
         } catch (error) {
-            console.error('Помилка обробки форми:', error);
+            console.error('Помилка додавання категорії:', error);
+            showToast('Помилка додавання категорії', 'error');
+        }
+    };
+}
+
+// ============================================================================
+// КАТЕГОРІЇ: РЕДАГУВАННЯ
+// ============================================================================
+
+function handleEditCategoryModalOpened(container) {
+    const form = container.querySelector('#form-edit-category');
+    const entityId = window._editEntityId;
+    
+    if (!entityId) {
+        showToast('Помилка: ID категорії не знайдено', 'error');
+        return;
+    }
+    
+    const entity = getEntityById('category', entityId);
+    
+    if (!entity) {
+        showToast('Помилка: категорію не знайдено', 'error');
+        return;
+    }
+    
+    // Заповнюємо форму даними
+    container.querySelector('#edit-category-id').value = entity.id;
+    container.querySelector('#edit-category-name-ua').value = entity.nameUa;
+    container.querySelector('#edit-category-name-ru').value = entity.nameRu || '';
+    container.querySelector('#edit-category-type').value = entity.type;
+    container.querySelector('#edit-category-row-index').value = entity.rowIndex;
+    
+    // Заповнюємо список батьківських категорій
+    const parentSelect = container.querySelector('#edit-category-parent-id');
+    populateParentCategoriesSelect(parentSelect, entityId);
+    parentSelect.value = entity.parentId || '';
+    
+    // Обробляємо submit форми
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const nameUa = container.querySelector('#edit-category-name-ua').value.trim();
+        const nameRu = container.querySelector('#edit-category-name-ru').value.trim();
+        const parentId = container.querySelector('#edit-category-parent-id').value.trim();
+        const type = container.querySelector('#edit-category-type').value.trim();
+        const rowIndex = parseInt(container.querySelector('#edit-category-row-index').value);
+        
+        if (!nameUa || !type) {
+            showToast('Заповніть обов\'язкові поля', 'error');
+            return;
+        }
+        
+        try {
+            const values = [entity.id, parentId, nameUa, nameRu, type];
+            await updateEntity('Categories', rowIndex, values);
+            
+            showToast('Категорію успішно оновлено', 'success');
+            renderAllTables();
+            closeModalByButton(container);
+            
+        } catch (error) {
+            console.error('Помилка оновлення категорії:', error);
+            showToast('Помилка оновлення категорії', 'error');
+        }
+    };
+}
+
+// ============================================================================
+// ХАРАКТЕРИСТИКИ: ДОДАВАННЯ
+// ============================================================================
+
+function handleAddCharacteristicModalOpened(container) {
+    const form = container.querySelector('#form-add-characteristic');
+    
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const nameUa = container.querySelector('#characteristic-name-ua').value.trim();
+        const nameRu = container.querySelector('#characteristic-name-ru').value.trim();
+        const paramType = container.querySelector('#characteristic-param-type').value.trim();
+        const unit = container.querySelector('#characteristic-unit').value.trim();
+        const filterType = container.querySelector('#characteristic-filter-type').value.trim();
+        const isGlobal = container.querySelector('#characteristic-is-global').checked ? 'TRUE' : 'FALSE';
+        
+        if (!nameUa || !paramType || !filterType) {
+            showToast('Заповніть обов\'язкові поля', 'error');
+            return;
+        }
+        
+        try {
+            const newId = generateCharacteristicId();
+            const values = [newId, nameUa, nameRu, paramType, unit, filterType, isGlobal];
+            
+            await addEntity('Characteristics', values);
+            
+            showToast('Характеристику успішно додано', 'success');
+            renderAllTables();
+            closeModalByButton(container);
+            
+        } catch (error) {
+            console.error('Помилка додавання характеристики:', error);
+            showToast('Помилка додавання характеристики', 'error');
+        }
+    };
+}
+
+// ============================================================================
+// ХАРАКТЕРИСТИКИ: РЕДАГУВАННЯ
+// ============================================================================
+
+function handleEditCharacteristicModalOpened(container) {
+    const form = container.querySelector('#form-edit-characteristic');
+    const entityId = window._editEntityId;
+    
+    if (!entityId) {
+        showToast('Помилка: ID характеристики не знайдено', 'error');
+        return;
+    }
+    
+    const entity = getEntityById('characteristic', entityId);
+    
+    if (!entity) {
+        showToast('Помилка: характеристику не знайдено', 'error');
+        return;
+    }
+    
+    // Заповнюємо форму даними
+    container.querySelector('#edit-characteristic-id').value = entity.id;
+    container.querySelector('#edit-characteristic-name-ua').value = entity.nameUa;
+    container.querySelector('#edit-characteristic-name-ru').value = entity.nameRu || '';
+    container.querySelector('#edit-characteristic-param-type').value = entity.paramType;
+    container.querySelector('#edit-characteristic-unit').value = entity.unit || '';
+    container.querySelector('#edit-characteristic-filter-type').value = entity.filterType;
+    container.querySelector('#edit-characteristic-is-global').checked = entity.isGlobal === 'TRUE';
+    container.querySelector('#edit-characteristic-row-index').value = entity.rowIndex;
+    
+    // Обробляємо submit форми
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const nameUa = container.querySelector('#edit-characteristic-name-ua').value.trim();
+        const nameRu = container.querySelector('#edit-characteristic-name-ru').value.trim();
+        const paramType = container.querySelector('#edit-characteristic-param-type').value.trim();
+        const unit = container.querySelector('#edit-characteristic-unit').value.trim();
+        const filterType = container.querySelector('#edit-characteristic-filter-type').value.trim();
+        const isGlobal = container.querySelector('#edit-characteristic-is-global').checked ? 'TRUE' : 'FALSE';
+        const rowIndex = parseInt(container.querySelector('#edit-characteristic-row-index').value);
+        
+        if (!nameUa || !paramType || !filterType) {
+            showToast('Заповніть обов\'язкові поля', 'error');
+            return;
+        }
+        
+        try {
+            const values = [entity.id, nameUa, nameRu, paramType, unit, filterType, isGlobal];
+            await updateEntity('Characteristics', rowIndex, values);
+            
+            showToast('Характеристику успішно оновлено', 'success');
+            renderAllTables();
+            closeModalByButton(container);
+            
+        } catch (error) {
+            console.error('Помилка оновлення характеристики:', error);
+            showToast('Помилка оновлення характеристики', 'error');
+        }
+    };
+}
+
+// ============================================================================
+// ОПЦІЇ: ДОДАВАННЯ
+// ============================================================================
+
+function handleAddOptionModalOpened(container) {
+    const form = container.querySelector('#form-add-option');
+    const charSelect = container.querySelector('#option-characteristic-id');
+    
+    // Заповнюємо список характеристик
+    populateCharacteristicsSelect(charSelect);
+    
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const characteristicId = container.querySelector('#option-characteristic-id').value.trim();
+        const nameUa = container.querySelector('#option-name-ua').value.trim();
+        const nameRu = container.querySelector('#option-name-ru').value.trim();
+        
+        if (!characteristicId || !nameUa) {
+            showToast('Заповніть обов\'язкові поля', 'error');
+            return;
+        }
+        
+        try {
+            const newId = generateOptionId();
+            const values = [newId, characteristicId, nameUa, nameRu];
+            
+            await addEntity('Options', values);
+            
+            showToast('Опцію успішно додано', 'success');
+            renderAllTables();
+            closeModalByButton(container);
+            
+        } catch (error) {
+            console.error('Помилка додавання опції:', error);
+            showToast('Помилка додавання опції', 'error');
+        }
+    };
+}
+
+// ============================================================================
+// ОПЦІЇ: РЕДАГУВАННЯ
+// ============================================================================
+
+function handleEditOptionModalOpened(container) {
+    const form = container.querySelector('#form-edit-option');
+    const entityId = window._editEntityId;
+    
+    if (!entityId) {
+        showToast('Помилка: ID опції не знайдено', 'error');
+        return;
+    }
+    
+    const entity = getEntityById('option', entityId);
+    
+    if (!entity) {
+        showToast('Помилка: опцію не знайдено', 'error');
+        return;
+    }
+    
+    // Заповнюємо форму даними
+    container.querySelector('#edit-option-id').value = entity.id;
+    container.querySelector('#edit-option-name-ua').value = entity.nameUa;
+    container.querySelector('#edit-option-name-ru').value = entity.nameRu || '';
+    container.querySelector('#edit-option-row-index').value = entity.rowIndex;
+    
+    // Заповнюємо список характеристик
+    const charSelect = container.querySelector('#edit-option-characteristic-id');
+    populateCharacteristicsSelect(charSelect);
+    charSelect.value = entity.characteristicId;
+    
+    // Обробляємо submit форми
+    form.onsubmit = async (e) => {
+        e.preventDefault();
+        
+        const characteristicId = container.querySelector('#edit-option-characteristic-id').value.trim();
+        const nameUa = container.querySelector('#edit-option-name-ua').value.trim();
+        const nameRu = container.querySelector('#edit-option-name-ru').value.trim();
+        const rowIndex = parseInt(container.querySelector('#edit-option-row-index').value);
+        
+        if (!characteristicId || !nameUa) {
+            showToast('Заповніть обов\'язкові поля', 'error');
+            return;
+        }
+        
+        try {
+            const values = [entity.id, characteristicId, nameUa, nameRu];
+            await updateEntity('Options', rowIndex, values);
+            
+            showToast('Опцію успішно оновлено', 'success');
+            renderAllTables();
+            closeModalByButton(container);
+            
+        } catch (error) {
+            console.error('Помилка оновлення опції:', error);
+            showToast('Помилка оновлення опції', 'error');
+        }
+    };
+}
+
+// ============================================================================
+// ДОПОМІЖНІ ФУНКЦІЇ
+// ============================================================================
+
+function populateParentCategoriesSelect(selectElement, excludeId = null) {
+    selectElement.innerHTML = '<option value="">— Немає (коренева категорія) —</option>';
+    
+    const categories = getCategoriesData(); // ← ЗМІНЕНО
+    categories.forEach(cat => {
+        if (cat.id !== excludeId) {
+            const option = document.createElement('option');
+            option.value = cat.id;
+            option.textContent = `${cat.id} — ${cat.nameUa}`;
+            selectElement.appendChild(option);
         }
     });
+}
 
-    // Обробники закриття
-    modal.querySelectorAll('.modal-close, .modal-overlay').forEach(el => {
-        el.addEventListener('click', () => closeModal(modal));
+function populateCharacteristicsSelect(selectElement) {
+    selectElement.innerHTML = '<option value="">— Оберіть характеристику —</option>';
+    
+    entitiesData.characteristics.forEach(char => {
+        const option = document.createElement('option');
+        option.value = char.id;
+        option.textContent = `${char.id} — ${char.nameUa}`;
+        selectElement.appendChild(option);
     });
-
-    return modal;
 }
 
-/**
- * Показує модальне вікно
- */
-function showModal(modal) {
-    setTimeout(() => modal.classList.add('is-active'), 10);
+function generateCategoryId() {
+    const categories = getCategoriesData(); // ← ЗМІНЕНО
+    const ids = categories.map(c => parseInt(c.id.replace('CAT', ''))).filter(n => !isNaN(n));
+    const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+    return `CAT${String(maxId + 1).padStart(3, '0')}`;
 }
 
-/**
- * Закриває та видаляє модальне вікно
- */
-function closeModal(modal) {
-    modal.classList.remove('is-active');
-    setTimeout(() => modal.remove(), 300);
+
+function generateCharacteristicId() {
+    const characteristics = getCharacteristicsData(); // ← ЗМІНЕНО
+    const ids = characteristics.map(c => parseInt(c.id.replace('CHAR', ''))).filter(n => !isNaN(n));
+    const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+    return `CHAR${String(maxId + 1).padStart(3, '0')}`;
+}
+
+
+function generateOptionId() {
+    const ids = entitiesData.options.map(o => parseInt(o.id.replace('OPT', ''))).filter(n => !isNaN(n));
+    const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+    return `OPT${String(maxId + 1).padStart(3, '0')}`;
+}
+
+function closeModalByButton(container) {
+    const closeBtn = container.querySelector('[data-modal-close]');
+    if (closeBtn) closeBtn.click();
 }
