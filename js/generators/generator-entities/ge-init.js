@@ -98,15 +98,9 @@ function initMarketplacesButton() {
         } catch (error) {
             console.error('❌ ПОМИЛКА при виклику openMarketplacesAdminModal:', error);
         }
-    }, true); // true = capture phase
+    });
 
-    // Додаємо ще один обробник для перевірки
-    btn.onclick = () => {
-        console.log('🖱️ ONCLICK СПРАЦЮВАВ!');
-    };
-
-    console.log('✅ Кнопка маркетплейсів ініціалізована');
-    console.log('🔍 Event listeners на кнопці:', getEventListeners ? getEventListeners(btn) : 'Неможливо перевірити');
+    console.log('✅ Кнопка маркетплейсів ініціалізована з event listener');
 }
 
 
@@ -180,3 +174,4 @@ if (document.readyState === 'loading') {
 } else {
     init();
 }
+
