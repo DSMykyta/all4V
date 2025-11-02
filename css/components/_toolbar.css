@@ -1,0 +1,119 @@
+/* css/components/_toolbar.css */
+/* XR Toolbar - з pin-map-v1.txt */
+
+.xr-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex: 1;
+    justify-content: space-between;
+}
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.toolbar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+}
+
+.toolbar-button .content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.toolbar-button .state-layer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transition: background 0.2s ease;
+}
+
+.toolbar-button:hover .state-layer {
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.toolbar-button:active .state-layer {
+    background: rgba(0, 0, 0, 0.12);
+}
+
+.toolbar-button .icon {
+    width: 24px;
+    height: 24px;
+    fill: var(--color-on-surface-v, #404947);
+}
+
+.toolbar-button:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+}
+
+.toolbar-button:disabled:hover .state-layer {
+    background: transparent;
+}
+
+/* Header controls */
+.header-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.header-controls .btn-outline,
+.header-controls .btn-primary {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-controls .btn-outline {
+    background: transparent;
+    border: 1px solid var(--color-outline, #707978);
+    color: var(--color-main, #006a63);
+}
+
+.header-controls .btn-outline:hover {
+    background: rgba(0, 106, 99, 0.08);
+}
+
+.header-controls .btn-primary {
+    background: var(--color-main, #006a63);
+    border: none;
+    color: var(--color-on-main, #FFFFFF);
+}
+
+.header-controls .btn-primary:hover {
+    background: var(--color-secondary, #4c635d);
+}
+
+.header-controls .material-symbols-outlined {
+    font-size: 18px;
+}
