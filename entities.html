@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Сутності</title>
+    <title>Управління сутностями</title>
+    <link rel="icon" href="data:,">
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/page/page-entities.css">
+    <link rel="stylesheet" href="css/page-entities.css">
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap"
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&display=swap"
         rel="stylesheet">
     <script async defer src="https://apis.google.com/js/api.js"></script>
     <script async defer src="https://accounts.google.com/gsi/client"></script>
@@ -19,13 +21,14 @@
 
 <body>
 
-    <!-- ЛІВА ПАНЕЛЬ: НАВІГАЦІЯ -->
+    <!-- ЛІВА ПАНЕЛЬ -->
     <nav id="panel-left" class="panel panel-left">
+
         <div class="panel-content-scroll">
 
             <a href="index.html" class="panel-item">
                 <span class="material-symbols-outlined panel-item-icon">home</span>
-                <span class="panel-item-text">Інструменти</span>
+                <span class="panel-item-text">Головна</span>
             </a>
 
             <a href="glossary.html" class="panel-item">
@@ -33,179 +36,262 @@
                 <span class="panel-item-text">Глосарій</span>
             </a>
 
-            <a href="entities.html" class="panel-item is-active">
+            <a href="entities.html" class="panel-item active">
                 <span class="material-symbols-outlined panel-item-icon">label</span>
                 <span class="panel-item-text">Сутності</span>
             </a>
 
             <div class="panel-separator"></div>
 
-            <div class="panel-item">
-                <span class="material-symbols-outlined panel-item-icon">info</span>
-                <span class="panel-item-text">Про проект</span>
-            </div>
+            <a href="https://docs.google.com/spreadsheets/d/1iFOCQUbisLprSfIkfCar3Oc5f8JW12kA0dpHzjEXSsk/edit"
+                target="_blank" rel="noopener noreferrer" class="panel-item">
+                <span class="material-symbols-outlined panel-item-icon">table_chart</span>
+                <span class="panel-item-text">Google Sheets</span>
+                <div class="btn-icon">
+                    <span class="material-symbols-outlined">open_in_new</span>
+                </div>
+            </a>
 
         </div>
 
         <div class="panel-content-footer">
-            <button id="auth-btn" class="panel-item">
-                <span class="material-symbols-outlined panel-item-icon">login</span>
-                <span class="panel-item-text">Авторизація</span>
+            <button id="auth-btn" class="fab" aria-label="Авторизуватися" style="display: none;">
+                <span class="material-symbols-outlined">login</span>
+            </button>
+            <button id="signout-btn" class="fab" aria-label="Вийти" style="display: none;">
+                <span class="material-symbols-outlined">logout</span>
             </button>
         </div>
+
     </nav>
 
-    <!-- ГОЛОВНА ЧАСТИНА: ТАБИ + ТАБЛИЦІ -->
-    <main id="content-main" class="content-main" data-panel-template="aside-entities">
+    <!-- ЦЕНТРАЛЬНИЙ БЛОК -->
+    <main id="content-main" class="content-main entities-main-content">
 
-        <!-- ЗАГОЛОВОК СЕКЦІЇ -->
-        <div class="section-header">
-            <div class="section-name-block">
-                <div class="section-name">
-                    <h2>Сутності</h2>
-                    <button class="btn-icon" aria-label="Інформація">
-                        <span class="material-symbols-outlined">info</span>
+        <!-- ФІКСОВАНА ШАПКА -->
+        <header class="entity-header fixed-header">
+
+            <div class="connected-button-group-square tabs-head" role="group" aria-label="Таби">
+
+                <button class="segment tab-button active" aria-label="Категорії" data-tab="categories">
+                    <div class="state-layer">
+                        <span class="label">Категорії</span>
+                    </div>
+                </button>
+
+                <button class="segment tab-button" aria-label="Характеристики" data-tab="characteristics">
+                    <div class="state-layer">
+                        <span class="label">Характеристики</span>
+                    </div>
+                </button>
+
+                <button class="segment tab-button" aria-label="Опції" data-tab="options">
+                    <div class="state-layer">
+                        <span class="label">Опції</span>
+                    </div>
+                </button>
+
+            </div>
+
+            <div class="xr-toolbar">
+                <div class="toolbar tabs-head">
+
+                    <a href="https://docs.google.com/spreadsheets/d/1iFOCQUbisLprSfIkfCar3Oc5f8JW12kA0dpHzjEXSsk/edit"
+                        target="_blank" rel="noopener noreferrer" class="toolbar-button" id="open-sheets-btn"
+                        style="display: none;" aria-label="Відкрити таблицю"
+                        title="Відкрити Google Sheets у новій вкладці">
+                        <div class="content">
+                            <div class="state-layer">
+                                <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor">
+                                    <path
+                                        d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </div>
+                    </a>
+
+                    <button id="refresh-data-btn" class="toolbar-button" style="display: none;" aria-label="Оновити дані"
+                        title="Оновити дані з Google Sheets">
+                        <div class="content">
+                            <div class="state-layer">
+                                <svg class="icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                                    fill="currentColor">
+                                    <path
+                                        d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </button>
+
+                </div>
+
+                <div class="header-controls">
+                    <button id="btn-marketplace-admin" class="btn-outline">
+                        <span class="material-symbols-outlined">storefront</span>
+                        <span>Маркетплейси</span>
+                    </button>
+                    <button id="btn-add-entity" class="btn-primary">
+                        <span class="material-symbols-outlined">add</span>
+                        <span>Додати</span>
                     </button>
                 </div>
-                <h3>Керування категоріями, характеристиками та опціями</h3>
             </div>
 
-            <div class="section-actions">
-                <button id="btn-add-entity" class="btn-primary">
-                    <span class="material-symbols-outlined">add</span>
-                    Додати
-                </button>
-                <button id="btn-reload" class="btn-icon" aria-label="Оновити дані">
-                    <span class="material-symbols-outlined">refresh</span>
-                </button>
+        </header>
+
+        <!-- SCROLLABLE CONTENT -->
+        <div class="entity-content scrollable">
+
+            <!-- TAB: CATEGORIES -->
+            <div id="categories" class="tab-content active">
+                <div class="pseudo-table-container">
+                    <div class="pseudo-table">
+                        <div class="pseudo-table-header">
+                            <div class="pseudo-table-cell cell-actions header-actions-cell">
+                                <input type="checkbox" class="header-select-all" aria-label="Вибрати всі">
+                            </div>
+                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id" data-column="local_id">
+                                <span>ID</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="parent_name" data-column="parent_name">
+                                <span>Батьківська</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name_uk" data-column="name_uk">
+                                <span>Назва UA</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="name_ru" data-column="name_ru">
+                                <span>Назва RU</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="category_type" data-column="category_type">
+                                <span>Тип</span><span class="sort-indicator"></span>
+                            </div>
+                            <!-- Динамічні колонки маркетплейсів додаються через JS -->
+                        </div>
+                        <div class="pseudo-table-body">
+                            <!-- Рядки додаються через JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
+
+            <!-- TAB: CHARACTERISTICS -->
+            <div id="characteristics" class="tab-content">
+                <div class="pseudo-table-container">
+                    <div class="pseudo-table">
+                        <div class="pseudo-table-header">
+                            <div class="pseudo-table-cell cell-actions header-actions-cell">
+                                <input type="checkbox" class="header-select-all">
+                            </div>
+                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id" data-column="local_id">
+                                <span>ID</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name_uk" data-column="name_uk">
+                                <span>Назва UA</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="category_names" data-column="category_names">
+                                <span>Категорії</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="param_type" data-column="param_type">
+                                <span>Тип параметра</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="is_global" data-column="is_global">
+                                <span>Глобальна</span><span class="sort-indicator"></span>
+                            </div>
+                            <!-- Динамічні колонки маркетплейсів -->
+                        </div>
+                        <div class="pseudo-table-body"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: OPTIONS -->
+            <div id="options" class="tab-content">
+                <div class="pseudo-table-container">
+                    <div class="pseudo-table">
+                        <div class="pseudo-table-header">
+                            <div class="pseudo-table-cell cell-actions header-actions-cell">
+                                <input type="checkbox" class="header-select-all">
+                            </div>
+                            <div class="pseudo-table-cell cell-id sortable-header" data-sort-key="local_id" data-column="local_id">
+                                <span>ID</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="char_name" data-column="char_name">
+                                <span>Характеристика</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell cell-main-name sortable-header" data-sort-key="name_uk" data-column="name_uk">
+                                <span>Назва UA</span><span class="sort-indicator"></span>
+                            </div>
+                            <div class="pseudo-table-cell sortable-header" data-sort-key="name_ru" data-column="name_ru">
+                                <span>Назва RU</span><span class="sort-indicator"></span>
+                            </div>
+                            <!-- Динамічні колонки маркетплейсів -->
+                        </div>
+                        <div class="pseudo-table-body"></div>
+                    </div>
+                </div>
+            </div>
+
+
         </div>
 
-        <!-- КОНТЕЙНЕР ТАБІВ -->
-        <div class="tabs-container" data-tabs-container>
-
-            <!-- КНОПКИ ТАБІВ -->
-            <div class="tabs-header">
-                <button class="tab-button active" data-tab-target="categories">
-                    <span class="material-symbols-outlined">category</span>
-                    Категорії
-                </button>
-                <button class="tab-button" data-tab-target="characteristics">
-                    <span class="material-symbols-outlined">tune</span>
-                    Характеристики
-                </button>
-                <button class="tab-button" data-tab-target="options">
-                    <span class="material-symbols-outlined">list</span>
-                    Опції
-                </button>
-            </div>
-
-            <!-- ТАБ 1: КАТЕГОРІЇ -->
-<div class="tab-content is-active" data-tab-content="categories">
-                <div id="categories-table-container" class="table-wrapper">
-                    <table class="entities-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input type="checkbox" id="select-all-categories" aria-label="Вибрати всі">
-                                </th>
-                                <th>ID</th>
-                                <th>Батьківська</th>
-                                <th>Назва (укр)</th>
-                                <th>Назва (рос)</th>
-                                <th>Тип</th>
-                                <th>Дії</th>
-                            </tr>
-                        </thead>
-                        <tbody id="categories-tbody">
-                            <tr class="loading-row">
-                                <td colspan="7">
-                                    <div class="loading-spinner"></div>
-                                    Завантаження...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+        <!-- ФІКСОВАНИЙ ФУТЕР -->
+        <footer class="entity-footer fixed-footer">
+            <div class="footer-left">
+                <div class="connected-button-group-round" role="group">
+                    <button id="btn-import" class="segment" aria-label="Імпорт">
+                        <div class="state-layer"><span class="label">Імпорт</span></div>
+                    </button>
+                    <button id="btn-export" class="segment" aria-label="Експорт">
+                        <div class="state-layer"><span class="label">Експорт</span></div>
+                    </button>
+                    <button id="btn-delete" class="segment btn-delete" aria-label="Видалити" disabled>
+                        <div class="state-layer"><span class="label">Видалити</span></div>
+                    </button>
+                    <button id="btn-merge" class="segment" aria-label="Поєднати" disabled>
+                        <div class="state-layer"><span class="label">Поєднати</span></div>
+                    </button>
                 </div>
             </div>
+            <div class="footer-right">
+                <div class="pagination-container">
+                    <div id="pagination-nav-container" class="pagination-nav"></div>
 
-            <!-- ТАБ 2: ХАРАКТЕРИСТИКИ -->
-<div class="tab-content" data-tab-content="characteristics">
-                <div id="characteristics-table-container" class="table-wrapper">
-                    <table class="entities-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input type="checkbox" id="select-all-characteristics" aria-label="Вибрати всі">
-                                </th>
-                                <th>ID</th>
-                                <th>Назва (укр)</th>
-                                <th>Назва (рос)</th>
-                                <th>Тип параметра</th>
-                                <th>Одиниця</th>
-                                <th>Тип фільтра</th>
-                                <th>Глобальна</th>
-                                <th>Дії</th>
-                            </tr>
-                        </thead>
-                        <tbody id="characteristics-tbody">
-                            <tr class="loading-row">
-                                <td colspan="9">
-                                    <div class="loading-spinner"></div>
-                                    Завантаження...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="page-size-selector" id="page-size-selector">
+                        <button class="page-size-trigger" aria-label="Кількість на сторінці">
+                            <span id="page-size-label">25</span>
+                        </button>
+                        <div class="page-size-menu">
+                            <button class="page-size-option" data-page-size="10">10</button>
+                            <button class="page-size-option" data-page-size="25">25</button>
+                            <button class="page-size-option" data-page-size="50">50</button>
+                            <button class="page-size-option" data-page-size="100">100</button>
+                            <button class="page-size-option" data-page-size="999999">Всі</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-
-            <!-- ТАБ 3: ОПЦІЇ -->
-<div class="tab-content" data-tab-content="characteristics">
-                <div id="options-table-container" class="table-wrapper">
-                    <table class="entities-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input type="checkbox" id="select-all-options" aria-label="Вибрати всі">
-                                </th>
-                                <th>ID</th>
-                                <th>ID Характеристики</th>
-                                <th>Назва (укр)</th>
-                                <th>Назва (рос)</th>
-                                <th>Дії</th>
-                            </tr>
-                        </thead>
-                        <tbody id="options-tbody">
-                            <tr class="loading-row">
-                                <td colspan="6">
-                                    <div class="loading-spinner"></div>
-                                    Завантаження...
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
+        </footer>
 
     </main>
 
-    <!-- ПРАВА ПАНЕЛЬ: ФІЛЬТРИ та ПОШУК -->
+    <!-- ПРАВА ПАНЕЛЬ -->
     <aside id="panel-right" class="panel panel-right">
         <div class="panel-header">
             <button id="btn-panel-right-toggle" class="btn-icon" aria-label="Згорнути панель">
-                <span class="material-symbols-outlined">keyboard_arrow_left</span>
+                <span class="material-symbols-outlined">chevron_right</span>
             </button>
         </div>
         <div id="panel-right-content" class="panel-content">
-            <!-- Тут буде завантажуватись шаблон aside-entities.html -->
+            <!-- aside-entities.html завантажується через JS -->
         </div>
     </aside>
 
-    <script type="module" src="js/main-entities.js"></script>
+    <div id="modal-placeholder"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script type="module" src="js/main-entities.js"></script>
 </body>
 
 </html>
