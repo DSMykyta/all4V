@@ -1,197 +1,53 @@
-<!-- templates/aside/aside-entities.html -->
-
-<!-- ПАНЕЛЬ ПОШУКУ -->
-<div class="panel-section">
-    <h3 class="panel-section-title">
-        <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">search</span>
-        Пошук
-    </h3>
-    
-    <div class="form-group">
-        <input 
-            type="text" 
-            id="search-input" 
-            class="input-main" 
-            placeholder="Шукати..."
-            aria-label="Пошук по таблиці"
-        >
-    </div>
-    
-    <p class="panel-hint">
-        Пошук працює по всіх полях таблиці
-    </p>
+<!-- ПОШУК -->
+<div class="panel-content-fix">
+    <div class="panel-box">
+        <span class="material-symbols-outlined panel-box-icon">search</span>
+        <input type="search" id="entity-search-input" class="input-main panel-search-input" placeholder="Пошук...">
+    </div>    
 </div>
 
 <div class="panel-separator"></div>
 
-<!-- 🆕 КНОПКА АДМІН-ПАНЕЛІ МАРКЕТПЛЕЙСІВ -->
-<button id="btn-marketplaces-admin" class="panel-item">
-    <span class="material-symbols-outlined panel-item-icon">settings</span>
-    <span class="panel-item-text">Маркетплейси</span>
-</button>
+<!-- УПРАВЛІННЯ КОЛОНКАМИ -->
+<div class="panel-content-scroll">
 
-<div class="panel-separator"></div>
-
-<!-- ВИБРАНІ ЕЛЕМЕНТИ -->
-<div class="panel-section">
-    <h3 class="panel-section-title">
-        <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">check_circle</span>
-        Вибрані елементи
-    </h3>
-    
-    <div class="selected-info">
-        <p id="selected-count" class="selected-count-text">
-            Нічого не вибрано
-        </p>
-        
-        <button 
-            id="btn-delete-selected" 
-            class="btn-secondary btn-danger" 
-            disabled
-            style="width: 100%; margin-top: 12px;"
-        >
-            <span class="material-symbols-outlined">delete</span>
-            Видалити обрані
-        </button>
+    <div class="panel-section-title">
+        <span>Видимість колонок</span>
     </div>
-    
-    <p class="panel-hint">
-        Виберіть елементи в таблиці для масового видалення
-    </p>
+
+    <div id="columns-visibility-container" class="columns-visibility-container">
+
+        <!-- Базові колонки (різні для кожного табу, встановлюються через JS) -->
+        <div id="columns-base" class="columns-group">
+            <!-- Додаються динамічно через JS залежно від активного табу -->
+        </div>
+
+        <!-- Динамічні колонки маркетплейсів (додаються при створенні маркетплейсу) -->
+        <div id="columns-marketplaces" class="columns-group">
+            <!-- Приклад (додається через JS):
+            <div class="columns-group-separator">Маркетплейси</div>
+            <label class="column-toggle-item">
+                <input type="checkbox" checked data-column="rozetka_cat_id">
+                <span>Rozetka ID</span>
+            </label>
+            -->
+        </div>
+
+    </div>
+
 </div>
 
 <div class="panel-separator"></div>
 
-<!-- ДОДАТКОВІ ІНСТРУМЕНТИ -->
-<div class="panel-section">
-    <h3 class="panel-section-title">
-        <span class="material-symbols-outlined" style="font-size: 18px; vertical-align: middle;">settings</span>
-        Інструменти
-    </h3>
-    
-    <div class="tools-list">
-        <button class="panel-tool-btn" title="Експорт в CSV" disabled>
-            <span class="material-symbols-outlined">download</span>
-            <span>Експорт CSV</span>
-        </button>
-        
-        <button class="panel-tool-btn" title="Експорт в JSON" disabled>
-            <span class="material-symbols-outlined">code</span>
-            <span>Експорт JSON</span>
-        </button>
-        
-        <button class="panel-tool-btn" title="Імпорт даних" disabled>
-            <span class="material-symbols-outlined">upload</span>
-            <span>Імпорт</span>
-        </button>
+<!-- СТАТИСТИКА -->
+<div class="panel-content-footer">
+    <div class="panel-box">
+        <span class="material-symbols-outlined panel-box-icon">info</span>
+        <div class="panel-item-text">
+            <div id="entity-stats" class="entity-stats">
+                <span id="stats-total">Всього: 0</span>
+                <span id="stats-selected">Вибрано: 0</span>
+            </div>
+        </div>
     </div>
-    
-    <p class="panel-hint">
-        Функції в розробці
-    </p>
 </div>
-
-<style>
-/* Стилі для aside-entities */
-
-.panel-section {
-    padding: 16px;
-    border-bottom: 1px solid var(--border-color, #e0e0e0);
-}
-
-.panel-section:last-child {
-    border-bottom: none;
-}
-
-.panel-section-title {
-    margin: 0 0 12px 0;
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text-primary, #1a1a1a);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.panel-hint {
-    margin: 8px 0 0 0;
-    font-size: 12px;
-    color: var(--text-secondary, #666);
-    line-height: 1.4;
-}
-
-.selected-info {
-    display: flex;
-    flex-direction: column;
-}
-
-.selected-count-text {
-    margin: 0;
-    font-size: 14px;
-    color: var(--text-primary, #333);
-    padding: 8px;
-    background: var(--surface-container-low, #f5f5f5);
-    border-radius: 6px;
-    text-align: center;
-}
-
-.btn-danger {
-    background: var(--error, #dc3545) !important;
-    color: white !important;
-}
-
-.btn-danger:hover:not(:disabled) {
-    background: var(--error-dark, #c82333) !important;
-}
-
-.btn-danger:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.tools-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.panel-tool-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    background: var(--surface-container-low, #f5f5f5);
-    border: 1px solid var(--border-color, #e0e0e0);
-    border-radius: 8px;
-    font-size: 14px;
-    color: var(--text-primary, #333);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    width: 100%;
-    text-align: left;
-}
-
-.panel-tool-btn:hover:not(:disabled) {
-    background: var(--surface-container, #e8e8e8);
-    border-color: var(--border-hover, #ccc);
-}
-
-.panel-tool-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.panel-tool-btn .material-symbols-outlined {
-    font-size: 20px;
-}
-
-.form-group {
-    margin-bottom: 0;
-}
-
-.panel-separator {
-    height: 1px;
-    background: var(--border-color, #e0e0e0);
-    margin: 0;
-}
-</style>
