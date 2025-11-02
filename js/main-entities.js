@@ -1,16 +1,18 @@
 // js/main-entities.js
+// Запускач для сторінки entities.html
+
 import { initCore } from './main-core.js';
-import './generators/generator-entities/ge-init.js';
+import { initEntities } from './entities/entities-init.js';
 
+// Ініціалізація при завантаженні DOM
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('🚀 Ініціалізація сторінки Entities...');
 
-async function initializeApp() {
-    try {
-        console.log('Ініціалізація сторінки Entities...');
-        initCore(); // Ініціалізуємо core (включаючи авторизацію)
-        console.log('Сторінка Entities успішно ініціалізована.');
-    } catch (error) {
-        console.error('Критична помилка під час ініціалізації:', error);
-    }
-}
+    // Спочатку ініціалізуємо core функціональність
+    initCore();
 
-document.addEventListener('DOMContentLoaded', initializeApp);
+    // Потім ініціалізуємо специфічні для entities функції
+    initEntities();
+
+    console.log('✅ Сторінка Entities готова');
+});
